@@ -26,7 +26,7 @@ internal class CreateListViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun navigateUp() {
+    fun navigateUp() {
         navigationWriter.navigateUp()
     }
 

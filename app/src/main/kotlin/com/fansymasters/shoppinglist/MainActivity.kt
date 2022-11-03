@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.fansymasters.shoppinglist.list.ListsGraphBuilder
 import com.fansymasters.shoppinglist.login.AuthenticationGraphBuilder
+import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import com.fansymasters.shoppinglist.ui.theme.FancyShoppingListTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,7 +46,7 @@ internal class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "authentication/Login"
+                        startDestination = NavigationRoutes.Authentication.Login
                     ) {
                         authenticationGraphBuilder.buildGraph(this)
                         listsGraphBuilder.buildGraph(this)
