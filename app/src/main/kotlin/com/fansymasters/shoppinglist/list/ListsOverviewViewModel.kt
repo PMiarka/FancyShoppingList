@@ -27,4 +27,8 @@ internal class ListsOverviewViewModel @Inject constructor(
     fun addList() {
         navigationWriter.navigate(NavigationRoutes.Lists.Create)
     }
+
+    fun navigateUp() {
+        navigationWriter.navigateUp()
+    }
 }

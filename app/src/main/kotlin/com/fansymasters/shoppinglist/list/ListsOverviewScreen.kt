@@ -15,11 +15,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
+import com.fansymasters.shoppinglist.ui.components.FancyTopBar
 import com.fansymasters.shoppinglist.ui.theme.SPACING_L
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 
@@ -39,10 +39,14 @@ private fun Content(
 ) {
     Log.e("Piotrek", "derivedState: $isShown")
     Scaffold(
-        topBar = { Text(text = "Lists", color = Color.White) },
+        topBar = { FancyTopBar("Lists", null) },
         modifier = Modifier.padding(SPACING_L.dp)
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
