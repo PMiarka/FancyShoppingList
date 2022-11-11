@@ -1,9 +1,9 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.fansymasters.shoppinglist.list
+package com.fansymasters.shoppinglist.list.overview.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -37,7 +37,6 @@ private fun Content(
     state: State<ProcessingState<List<ListDto>>>,
     viewModel: ListsOverviewViewModel
 ) {
-    Log.e("Piotrek", "derivedState: $isShown")
     Scaffold(
         topBar = { FancyTopBar("Lists", null) },
         modifier = Modifier.padding(SPACING_L.dp)
@@ -65,6 +64,9 @@ private fun Content(
                                 )
                                 .fillMaxWidth()
                                 .padding(SPACING_S.dp)
+                                .clickable {
+                                    viewModel.openListsDetails(item.id)
+                                }
                         ) {
                             Text(text = item.name, modifier = Modifier)
                         }
