@@ -1,10 +1,9 @@
 name: default
 
 on:
-push:
-  jobs:
-    - get_api_key2
-
+  push:
+    branches: '*'
+    
 jobs:
   get_api_key2:
     name: Get Api Url
