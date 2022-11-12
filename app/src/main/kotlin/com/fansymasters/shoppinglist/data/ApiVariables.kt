@@ -1,3 +1,5 @@
 package com.fansymasters.shoppinglist.data
 
-internal const val API_URL = "https://fancymasters.com:44427"
+import com.fansymasters.shoppinglist.BuildConfig
+
+internal const val API_URL = BuildConfig.API_URL

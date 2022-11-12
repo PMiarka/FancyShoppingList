@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.util.*
+
+
 plugins {
     id("kotlin-android")
     id("com.android.application")
@@ -22,14 +26,16 @@ android {
             useSupportLibrary = true
         }
     }
-
+    val apiKey = getSecretProperty("apiUrl")
     buildTypes {
         getByName("debug") {
             applicationIdSuffix = ".debug"
             isDebuggable = true
+            buildConfigField("String", "API_URL", apiKey)
         }
         getByName("release") {
             isMinifyEnabled = true
+            buildConfigField("String", "API_URL", apiKey)
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -200,5 +206,11 @@ fun DependencyHandlerScope.uiTestImplementation() {
     androidTestImplementation("androidx.test.ext:junit:$extJunitVersion")
     androidTestImplementation("androidx.test.espresso:espresso-core:$espressoCore")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+}
 
+fun getSecretProperty(key: String): String {
+    val fis = FileInputStream("secret.properties")
+    val prop = Properties()
+    prop.load(fis)
+    return prop.getProperty(key)
 }
