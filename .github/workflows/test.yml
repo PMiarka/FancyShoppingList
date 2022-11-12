@@ -1,5 +1,13 @@
-steps:
-  - name: Access API_URL
-    env:
-      API_URL: ${{secrets.API_URL}}
-    run: echo API_URL=\"apiUrl\" > ./secret.properties
+name: default
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  steps:
+    - name: GET_API_URL
+        env:
+          API_URL: ${{secrets.API_URL}}
+        run: echo API_URL=\"apiUrl\" > ./secret.properties
