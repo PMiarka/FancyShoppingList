@@ -1,5 +1,7 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+env:
+  DATA: ${{ secrets.GOOGLE_SERVICES }}
 on: [ push ]
 jobs:
   build:
@@ -9,6 +11,6 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
       - run: echo apiUrl=${{ secrets.API_URL }} > ./secret.properties
-      - run: echo ${{ secrets.GOOGLE_SERVICES }} > ./app/google-services.json
+      - run: echo $DATA > ./app/google-services.json
       - name: Build the app
         run: ./gradlew build
