@@ -1,7 +1,7 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 env:
-  API_URL: $
+  apiUrl: ${{ secrets.API_URL}}
 on: [ push ]
 jobs:
   Explore-GitHub-Actions:
@@ -17,4 +17,5 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}. $API_URL"
+      - run: echo apiUrl=\"apiUrl\" >
+      - run: echo "🍏 This job's status is ${{ job.status }}. apiUrl or ${{ secrets.API_URL }}"
