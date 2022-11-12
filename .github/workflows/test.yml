@@ -7,7 +7,7 @@ on:
 
 jobs:
   steps:
-    - name: GET_API_URL
-        env:
-          apiUrl: ${{ secrets.API_URL }}
-        run: echo apiUrl=\"apiUrl\" > ./secret.properties
+    - name: Get Api Url
+      env:
+        apiUrl: ${{ secrets.API_URL }}
+      run: echo apiUrl=\"apiUrl\" > ./secret.properties
