@@ -17,12 +17,12 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - run: echo $apiUrl=\"apiUrl\" > ./secret.properties
       - run: echo "🍏 This job's status is ${{ job.status }}. apiUrl or ${{ secrets.API_URL }}"
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
+      - run: echo $apiUrl=\"apiUrl\" > ./secret.properties
       - name: Build the app
         run: ./gradlew build
