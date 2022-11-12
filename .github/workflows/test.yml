@@ -1,4 +1,4 @@
-- name: Get Api Url
-  env:
-    API_URL: $
-  run: echo apiUrl=\"apiUrl\" > ./secret.properties
+name: Get Api Url
+env:
+  API_URL: $
+run: echo apiUrl=\"apiUrl\" > ./secret.properties
