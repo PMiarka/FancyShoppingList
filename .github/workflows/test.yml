@@ -7,5 +7,4 @@ on:
 jobs:
   get_api_key2:
     steps:
-      name: Get Api Url
       run: echo apiUrl=\"apiUrl\" > ./secret.properties
