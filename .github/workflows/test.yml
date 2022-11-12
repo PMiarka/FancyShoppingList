@@ -1,8 +1,7 @@
 name: default
 
 on:
-  push:
-    branches:
+push:
   jobs:
     - get_api_key
 
