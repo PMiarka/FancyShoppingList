@@ -9,5 +9,5 @@ jobs:
   steps:
     - name: GET_API_URL
         env:
-          somecredentiaosl: ${{secrets.API_URL}}
-        run: echo API_URL=\"apiUrl\" > ./secret.properties
+          apiUrl: ${{ secrets.API_URL }}
+        run: echo apiUrl=\"apiUrl\" > ./secret.properties
