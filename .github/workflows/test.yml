@@ -8,6 +8,4 @@ jobs:
   get_api_key2:
     steps:
       name: Get Api Url
-      env:
-        API_URL: $
       run: echo apiUrl=\"apiUrl\" > ./secret.properties
