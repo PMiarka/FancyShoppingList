@@ -1,7 +1,5 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-env:
-  apiUrl: $
 on: [ push ]
 jobs:
   build:
@@ -10,6 +8,6 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - name: Checkout the code
         uses: actions/checkout@v2
-      - run: echo apiUrl=$apiUrl > ./secret.properties
+      - run: echo apiUrl=${ secrets.API_URL } > ./secret.properties
       - name: Build the app
         run: ./gradlew build
