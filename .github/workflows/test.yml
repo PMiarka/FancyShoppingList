@@ -3,10 +3,11 @@ name: default
 on:
   push:
     branches: '*'
-    
+
 jobs:
   get_api_key2:
-    name: Get Api Url
-    env:
-      API_URL: $
-    run: echo apiUrl=\"apiUrl\" > ./secret.properties
+    steps:
+      name: Get Api Url
+      env:
+        API_URL: $
+      run: echo apiUrl=\"apiUrl\" > ./secret.properties
