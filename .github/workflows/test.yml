@@ -1,7 +1,8 @@
-name: Access API_URL
-  env:
-    API_KEY: $
-  run: echo API_URL=\"API_URL\" > ./secret.properties
+steps:
+  - name: Access API_URL
+    env:
+      API_URL: ${{secrets.API_URL}}
+    run: echo API_URL=\"apiUrl\" > ./secret.properties
 
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
   on: [ push ]
