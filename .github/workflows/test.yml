@@ -3,10 +3,10 @@ name: default
 on:
 push:
   jobs:
-    - get_api_key
+    - get_api_key2
 
 jobs:
-  get_api_key:
+  get_api_key2:
     name: Get Api Url
     env:
       API_URL: $
