@@ -2,8 +2,7 @@ package com.fansymasters.shoppinglist.data.lists
 
 import com.google.gson.annotations.SerializedName
 
-data class ListItemDto(
-    @SerializedName("id") val id: Int,
+data class CreateListItemDto(
     @SerializedName("name") val name: String,
     @SerializedName("qty") val qty: Int,
     @SerializedName("sortNo") val sortNo: Int,

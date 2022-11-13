@@ -11,10 +11,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.FancyShoppingListTheme
 import com.fansymasters.shoppinglist.list.ListsGraphBuilder
 import com.fansymasters.shoppinglist.login.AuthenticationGraphBuilder
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
-import com.fansymasters.shoppinglist.ui.theme.FancyShoppingListTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

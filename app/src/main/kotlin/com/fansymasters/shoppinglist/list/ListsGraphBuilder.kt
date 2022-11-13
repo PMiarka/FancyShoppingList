@@ -5,12 +5,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.fansymasters.shoppinglist.list.createitem.presentation.CreateItemScreen
 import com.fansymasters.shoppinglist.list.createlist.presentation.CreateListScreen
 import com.fansymasters.shoppinglist.list.details.presentation.ListDetailsScreen
 import com.fansymasters.shoppinglist.list.overview.presentation.ListsOverviewScreen
 import com.fansymasters.shoppinglist.navigation.GraphBuilder
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
-import com.fansymasters.shoppinglist.ui.getIntArgument
 
 class ListsGraphBuilder : GraphBuilder {
     override fun buildGraph(navGraphBuilder: NavGraphBuilder) {
@@ -32,8 +32,17 @@ class ListsGraphBuilder : GraphBuilder {
                     }
                 )
             ) {
-                val listId = it.getIntArgument(NavigationRoutes.Lists.Arguments.LIST_ID) ?: -1
-                ListDetailsScreen(listId)
+                ListDetailsScreen()
+            }
+            composable(
+                route = NavigationRoutes.Lists.CreateItem,
+                arguments = listOf(
+                    navArgument(NavigationRoutes.Lists.Arguments.LIST_ID) {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                CreateItemScreen()
             }
         }
     }

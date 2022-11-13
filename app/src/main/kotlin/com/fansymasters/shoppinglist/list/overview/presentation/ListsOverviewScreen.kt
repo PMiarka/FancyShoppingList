@@ -57,9 +57,9 @@ private fun Content(
                             modifier = Modifier
                                 .background(
                                     if (index % 2 == 0) {
-                                        MaterialTheme.colorScheme.primary
+                                        MaterialTheme.colorScheme.primaryContainer
                                     } else {
-                                        MaterialTheme.colorScheme.secondary
+                                        MaterialTheme.colorScheme.secondaryContainer
                                     }
                                 )
                                 .fillMaxWidth()

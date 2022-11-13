@@ -15,6 +15,7 @@ sealed interface NavigationRoutes {
         const val Overview = "$Root/Overview"
         const val Create = "$Root/Create"
         const val Details = "$Root/Details/{$LIST_ID}"
+        const val CreateItem = "$Root/CreateItem/{$LIST_ID}"
 
         object Arguments {
             const val LIST_ID = "listId"

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class CreateListUserCase @Inject constructor(private val api: ListsApi) :
+internal class CreateListUseCase @Inject constructor(private val api: ListsApi) :
     ProcessingStateReader<ListDto>,
     CreateListActions {
     override val state = MutableStateFlow<ProcessingState<ListDto>>(ProcessingState.Idle)
