@@ -3,6 +3,7 @@ package com.fansymasters.shoppinglist.data.lists
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 internal interface ListsApi {
 
@@ -11,4 +12,8 @@ internal interface ListsApi {
 
     @POST("/api/List")
     suspend fun createList(@Body listToCreate: CreateListDto): ListDto
+
+    @GET("/api/List/{listId}")
+    suspend fun fetchListDetails(@Path("listId") listId: Int): ListDetailsDto
+
 }

@@ -6,6 +6,7 @@ import com.fansymasters.shoppinglist.NavigationWriter
 import com.fansymasters.shoppinglist.data.account.LoginResponseDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
 import com.fansymasters.shoppinglist.login.usecase.LoginUserActions
 import com.fansymasters.shoppinglist.login.usecase.RegisterUserGoogleActions
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
@@ -21,13 +22,14 @@ internal class LoginViewModel @Inject constructor(
     private val registerUserGoogleActions: RegisterUserGoogleActions,
     private val loginUserActions: LoginUserActions,
     private val navigationWriter: NavigationWriter,
+    private val listsNavigation: ListsNavigation,
     private val processingState: ProcessingStateReader<LoginResponseDto>
 ) : ViewModel(), ProcessingStateReader<LoginResponseDto> by processingState {
 
     init {
         state.filterIsInstance<ProcessingState.Success<LoginResponseDto>>()
             .onEach {
-                navigationWriter.navigate(NavigationRoutes.Lists.Overview)
+                listsNavigation.openListsOverview()
             }
             .launchIn(viewModelScope)
         onLogInClick("pimi2", "1234")

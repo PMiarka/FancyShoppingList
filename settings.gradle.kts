@@ -1,4 +1,8 @@
+rootProject.name = "FancyShoppingList"
+include(":app")
+
 pluginManagement {
+
     repositories {
         gradlePluginPortal()
         google()
@@ -12,5 +16,3 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "FancyShoppingList"
-include ':app'

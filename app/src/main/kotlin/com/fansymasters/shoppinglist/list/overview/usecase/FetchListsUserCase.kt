@@ -1,7 +1,6 @@
-package com.fansymasters.shoppinglist.list.usecase
+package com.fansymasters.shoppinglist.list.overview.usecase
 
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.lists.CreateListDto
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
 import com.fansymasters.shoppinglist.data.onError
@@ -13,14 +12,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class CreateListUserCase @Inject constructor(private val api: ListsApi) :
-    ProcessingStateReader<ListDto>,
-    CreateListActions {
-    override val state = MutableStateFlow<ProcessingState<ListDto>>(ProcessingState.Idle)
+internal class FetchListsUserCase @Inject constructor(private val api: ListsApi) :
+    ProcessingStateReader<List<ListDto>>,
+    FetchListsActions {
+    override val state = MutableStateFlow<ProcessingState<List<ListDto>>>(ProcessingState.Idle)
 
-    override suspend fun createList(name: String, description: String) {
+    override suspend fun fetchLists() {
         state.value = ProcessingState.Processing
-        apiCall { api.createList(CreateListDto(name = name, description = description)) }
+        apiCall { api.fetchUserLists() }
             .onSuccess { state.value = ProcessingState.Success(it) }
             .onError { state.value = ProcessingState.Error(it) }
     }
