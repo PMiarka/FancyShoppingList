@@ -24,24 +24,22 @@ import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 
 @Composable
 internal fun ListDetailsScreen(
-    listId: Int,
     viewModel: ListDetailsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
 
-    Content(state.value is ProcessingState.Success, state, viewModel)
+    Content(state, viewModel)
 }
 
 @Composable
 private fun Content(
-    isShown: Boolean,
     state: State<ProcessingState<ListDetailsDto>>,
     viewModel: ListDetailsViewModel
 ) {
     val successState = (state.value as? ProcessingState.Success<ListDetailsDto>)
     Scaffold(
         topBar = { FancyTopBar(successState?.data?.name ?: "", null) },
-        modifier = Modifier.padding(SPACING_L.dp)
+        modifier = Modifier.padding(vertical = SPACING_L.dp)
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -59,9 +57,9 @@ private fun Content(
                             modifier = Modifier
                                 .background(
                                     if (index % 2 == 0) {
-                                        MaterialTheme.colorScheme.primary
+                                        MaterialTheme.colorScheme.primaryContainer
                                     } else {
-                                        MaterialTheme.colorScheme.secondary
+                                        MaterialTheme.colorScheme.secondaryContainer
                                     }
                                 )
                                 .fillMaxWidth()
@@ -74,7 +72,7 @@ private fun Content(
                 }
             }
             FloatingButton(
-                onClick = viewModel::addList,
+                onClick = viewModel::addItem,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
             )
@@ -84,7 +82,7 @@ private fun Content(
 
 
 @Composable
-fun FloatingButton(onClick: () -> Unit, modifier: Modifier) {
+private fun FloatingButton(onClick: () -> Unit, modifier: Modifier) {
     FloatingActionButton(onClick = onClick, modifier = modifier) {
         Icon(Icons.Default.Add, contentDescription = "Add")
     }

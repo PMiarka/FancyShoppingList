@@ -3,8 +3,10 @@ package com.fansymasters.shoppinglist.list.di
 import com.fansymasters.shoppinglist.data.lists.ListDetailsDto
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.list.createitem.usecase.CreateItemActions
+import com.fansymasters.shoppinglist.list.createitem.usecase.CreateItemUseCase
 import com.fansymasters.shoppinglist.list.createlist.usecase.CreateListActions
-import com.fansymasters.shoppinglist.list.createlist.usecase.CreateListUserCase
+import com.fansymasters.shoppinglist.list.createlist.usecase.CreateListUseCase
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsActions
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsUseCase
 import com.fansymasters.shoppinglist.list.navigation.ListNavigationImpl
@@ -28,10 +30,10 @@ internal class ListsModule {
             ProcessingStateReader<List<ListDto>> = impl
 
     @Provides
-    fun providesCreateListActions(impl: CreateListUserCase): CreateListActions = impl
+    fun providesCreateListActions(impl: CreateListUseCase): CreateListActions = impl
 
     @Provides
-    fun providesCreateListState(impl: CreateListUserCase):
+    fun providesCreateListState(impl: CreateListUseCase):
             ProcessingStateReader<ListDto> = impl
 
     @Provides
@@ -41,6 +43,12 @@ internal class ListsModule {
     @Provides
     fun providesFetchListDetailsState(impl: FetchListDetailsUseCase):
             ProcessingStateReader<ListDetailsDto> = impl
+
+    @Provides
+    fun providesCreateItemState(impl: CreateItemUseCase): ProcessingStateReader<Unit> = impl
+
+    @Provides
+    fun providesCreateItemActions(impl: CreateItemUseCase): CreateItemActions = impl
 
     @Provides
     fun providesListNavigation(impl: ListNavigationImpl): ListsNavigation = impl
