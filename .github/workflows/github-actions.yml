@@ -18,7 +18,6 @@ jobs:
       - name: Build the app
         run: ./gradlew testDebugUnitTest jacocoAndroidTestReport
       - name: Add coverage to PR
-          id: jacoco
           uses: madrapps/jacoco-report@v1.3
           with:
             paths: ${{ github.workspace }}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
