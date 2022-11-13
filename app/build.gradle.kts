@@ -1,7 +1,6 @@
 import java.io.FileInputStream
 import java.util.*
 
-
 plugins {
     id("kotlin-android")
     id("com.android.application")
@@ -9,6 +8,8 @@ plugins {
     id("com.google.gms.google-services")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("jacoco")
+    id("jacoco-report")
 }
 
 android {
@@ -32,6 +33,8 @@ android {
             applicationIdSuffix = ".debug"
             isDebuggable = true
             buildConfigField("String", "API_URL", apiKey)
+            isTestCoverageEnabled = true
+            enableUnitTestCoverage = true
         }
         getByName("release") {
             isMinifyEnabled = true
@@ -42,6 +45,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -61,6 +65,13 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    testCoverage {
+        jacocoVersion = "0.8.8"
+    }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.isReturnDefaultValues = true
     }
 }
 val composeVersion = "1.3.1"
@@ -100,7 +111,11 @@ dependencies {
     // Room
     roomImplementation()
 
+    testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("app.cash.turbine:turbine:0.12.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
 
     uiTestImplementation()
 
@@ -209,7 +224,7 @@ fun DependencyHandlerScope.uiTestImplementation() {
 }
 
 fun getSecretProperty(key: String): String {
-    val fis = FileInputStream("secret.properties")
+    val fis = FileInputStream("$rootDir/secret.properties")
     val prop = Properties()
     prop.load(fis)
     return prop.getProperty(key)

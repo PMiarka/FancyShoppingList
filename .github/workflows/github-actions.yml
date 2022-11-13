@@ -1,0 +1,27 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+env:
+  API_URL: ${{ secrets.API_URL }}
+  GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+on:
+  pull_request:
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build started."
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - run: echo apiUrl=\"$API_URL\" > ./secret.properties
+      - run: echo $GOOGLE_SERVICES > ./app/google-services.json
+      - name: Build the app
+        run: ./gradlew testDebugUnitTest jacocoAndroidTestReport
+      - name: Add coverage to PR
+          id: jacoco
+          uses: madrapps/jacoco-report@v1.3
+          with:
+            paths: ${{ github.workspace }}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+            token: ${{ secrets.GITHUB_TOKEN }}
+            min-coverage-overall: 0
+            min-coverage-changed-files: 60
