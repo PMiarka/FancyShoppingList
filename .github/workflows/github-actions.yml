@@ -1,5 +1,5 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Build&Tests
+run-name: ${{ github.actor }} created PR ${{ github.ref_name }} build and tests are about to start
 env:
   API_URL: ${{ secrets.API_URL }}
   GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: echo "Build started."
       - name: Checkout the code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - run: echo apiUrl=\"$API_URL\" > ./secret.properties
       - run: echo $GOOGLE_SERVICES > ./app/google-services.json
       - name: Build the app

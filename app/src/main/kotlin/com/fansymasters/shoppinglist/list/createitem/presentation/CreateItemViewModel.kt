@@ -3,11 +3,16 @@ package com.fansymasters.shoppinglist.list.createitem.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.data.lists.di.Category
+import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.list.createitem.usecase.CreateItemActions
 import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,13 +26,25 @@ internal class CreateItemViewModel @Inject constructor(
     private val listId =
         savedState.get<String>(NavigationRoutes.Lists.Arguments.LIST_ID)?.toInt() ?: -1
 
+    init {
+        state.filterIsInstance<ProcessingState.Success<Unit>>()
+            .onEach { navigateUp() }
+            .launchIn(viewModelScope)
+    }
+
     fun navigateUp() {
         listsNavigation.navigateUp()
     }
 
-    fun createItem(name: String) {
+    fun createItem(name: String, unit: String, quantity: Int, category: Category) {
         viewModelScope.launch {
-            createItemActions.createItem(name, listId)
+            createItemActions.createItem(
+                name = name,
+                unit = unit,
+                quantity = quantity,
+                category = category,
+                listId = listId
+            )
         }
     }
 }
