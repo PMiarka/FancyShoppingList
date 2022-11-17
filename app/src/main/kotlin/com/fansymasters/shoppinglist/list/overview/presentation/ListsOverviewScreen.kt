@@ -37,6 +37,7 @@ private fun Content(
     state: State<ProcessingState<List<ListDto>>>,
     viewModel: ListsOverviewViewModel
 ) {
+
     Scaffold(
         topBar = { FancyTopBar("Lists", null) },
         modifier = Modifier.padding(SPACING_L.dp)
@@ -45,6 +46,7 @@ private fun Content(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
+
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -68,7 +70,11 @@ private fun Content(
                                     viewModel.openListsDetails(item.id)
                                 }
                         ) {
-                            Text(text = item.name, modifier = Modifier)
+                            Text(
+                                text = item.name,
+                                style = MaterialTheme.typography.headlineMedium,
+                                modifier = Modifier.padding(horizontal = SPACING_S.dp)
+                            )
                         }
                     }
                 }

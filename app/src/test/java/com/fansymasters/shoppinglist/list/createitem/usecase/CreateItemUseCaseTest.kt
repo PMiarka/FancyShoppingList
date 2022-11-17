@@ -4,12 +4,13 @@ import app.cash.turbine.test
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
+import com.fansymasters.shoppinglist.data.lists.di.Category
 import com.fansymasters.shoppinglist.domain.FancyError
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import io.mockk.coEvery
 import io.mockk.mockk
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 internal class CreateItemUseCaseTest {
@@ -61,7 +62,7 @@ internal class CreateItemUseCaseTest {
 
         // when-then
         testedUseCase.state.test {
-            testedUseCase.createItem("name", 0)
+            testedUseCase.createItem("name", "unit", 0, Category.OTHER, 1)
 
             expected.forEach {
                 assertEquals(it, awaitItem())
@@ -84,7 +85,7 @@ internal class CreateItemUseCaseTest {
 
         // when-then
         testedUseCase.state.test {
-            testedUseCase.createItem("name", 0)
+            testedUseCase.createItem("name", "unit", 0, Category.OTHER, 1)
 
             expected.forEach {
                 assertEquals(it, awaitItem())
