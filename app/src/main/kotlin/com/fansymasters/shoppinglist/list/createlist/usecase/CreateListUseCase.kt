@@ -8,12 +8,16 @@ import com.fansymasters.shoppinglist.data.onError
 import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.list.domain.ListDetailsRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class CreateListUseCase @Inject constructor(private val api: ListsApi) :
+internal class CreateListUseCase @Inject constructor(
+    private val api: ListsApi,
+    private val repository: ListDetailsRepository
+) :
     ProcessingStateReader<ListDto>,
     CreateListActions {
     override val state = MutableStateFlow<ProcessingState<ListDto>>(ProcessingState.Idle)

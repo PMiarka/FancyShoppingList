@@ -7,7 +7,7 @@ import java.net.UnknownHostException
 suspend fun <T> apiCall(function: suspend () -> T): ApiResult<T> =
     runCatching { function() }
         .map { ApiResult.Success(it) }
-        .onFailure { ApiResult.Error(FancyError.Unknown) }
+        .onFailure { ApiResult.Error(it.mapToError()) }
         .getOrElse { ApiResult.Error(it.mapToError()) }
 
 private fun Throwable.mapToError(): FancyError =

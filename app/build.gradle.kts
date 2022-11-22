@@ -150,8 +150,10 @@ fun DependencyHandlerScope.lifecycleImplementation() {
 }
 
 fun DependencyHandlerScope.materialsImplementation() {
-    val materialsVersion = "1.1.0-alpha02"
-    implementation("androidx.compose.material3:material3:$materialsVersion")
+    val materials3Version = "1.1.0-alpha02"
+    val materialsVersion = "1.3.1"
+    implementation("androidx.compose.material3:material3:$materials3Version")
+    implementation("androidx.compose.material:material:$materialsVersion")
 }
 
 fun DependencyHandlerScope.coroutinesImplementation() {
@@ -206,7 +208,7 @@ fun DependencyHandlerScope.composeDebugImplementation() {
 }
 
 fun DependencyHandlerScope.hiltImplementation() {
-    val hiltVersion = "2.43.2"
+    val hiltVersion = "2.44.1"
     val androidxHiltVersion = "1.0.0"
     implementation("androidx.hilt:hilt-navigation-compose:$androidxHiltVersion")
     implementation("com.google.dagger:hilt-android:$hiltVersion")

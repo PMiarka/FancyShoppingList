@@ -1,26 +1,32 @@
 package com.fansymasters.shoppinglist.list.details.usecase
 
+import android.util.Log
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.lists.ListDetailsDto
-import com.fansymasters.shoppinglist.data.lists.ListsApi
 import com.fansymasters.shoppinglist.data.onError
 import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.domain.ProcessingState
-import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.domain.StateReader
+import com.fansymasters.shoppinglist.list.domain.ListDetailsRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class FetchListDetailsUseCase @Inject constructor(private val api: ListsApi) :
-    ProcessingStateReader<ListDetailsDto>,
+internal class FetchListDetailsUseCase @Inject constructor(private val repository: ListDetailsRepository) :
+    StateReader<FetchListDetailsState>,
     FetchListDetailsActions {
-    override val state = MutableStateFlow<ProcessingState<ListDetailsDto>>(ProcessingState.Idle)
+    private val apiState = MutableStateFlow<ProcessingState<Unit>>(ProcessingState.Idle)
+
+    override val state = repository.localState.combine(apiState) { localState, apiState ->
+        Log.e("Piotrek", "$localState, $apiState")
+        FetchListDetailsState(apiState, localState)
+    }
 
     override suspend fun fetchListDetails(listId: Int) {
-        state.value = ProcessingState.Processing
-        apiCall { api.fetchListDetails(listId) }
-            .onSuccess { state.value = ProcessingState.Success(it) }
-            .onError { state.value = ProcessingState.Error(it) }
+        apiState.value = ProcessingState.Processing
+        apiCall { repository.fetchListItems(listId) }
+            .onSuccess { apiState.value = ProcessingState.Success(Unit) }
+            .onError { apiState.value = ProcessingState.Error(it) }
     }
 }

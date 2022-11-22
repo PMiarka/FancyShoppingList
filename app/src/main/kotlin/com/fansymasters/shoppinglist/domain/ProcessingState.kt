@@ -6,3 +6,5 @@ sealed interface ProcessingState<out T> {
     data class Success<T>(val data: T) : ProcessingState<T>
     data class Error(val error: FancyError) : ProcessingState<Nothing>
 }
+
+fun ProcessingState<*>.isProcessing(): Boolean = this is ProcessingState.Processing
