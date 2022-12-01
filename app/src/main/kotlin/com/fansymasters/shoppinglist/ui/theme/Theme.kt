@@ -1,10 +1,12 @@
-package com.example.compose
+package com.fansymasters.shoppinglist.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
 
 
 private val LightColors = lightColorScheme(
@@ -85,8 +87,13 @@ fun FancyShoppingListTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
-    )
+        typography = Typography
+    ) {
+        ProvideTextStyle(
+            value = TextStyle(color = colors.primary),
+            content = content
+        )
+    }
 }
 
 //

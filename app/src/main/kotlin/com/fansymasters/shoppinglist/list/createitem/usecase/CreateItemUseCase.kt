@@ -1,5 +1,6 @@
 package com.fansymasters.shoppinglist.list.createitem.usecase
 
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.di.Category
 import com.fansymasters.shoppinglist.data.onError
@@ -27,7 +28,7 @@ internal class CreateItemUseCase @Inject constructor(
         listId: Int
     ) {
         state.value = ProcessingState.Processing
-        apiCall { repository.createListItem(listId, name, unit, quantity, category) }
+        apiCall(noMapper()) { repository.createListItem(listId, name, unit, quantity, category) }
             .onSuccess { state.value = ProcessingState.Success(Unit) }
             .onError { state.value = ProcessingState.Error(it) }
     }

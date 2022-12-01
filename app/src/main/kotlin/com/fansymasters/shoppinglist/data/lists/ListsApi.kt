@@ -21,9 +21,12 @@ internal interface ListsApi {
 
     @PUT("/api/ListItem/{itemId}")
     suspend fun updateItem(
-        @Path("itemId") listId: Int,
+        @Path("itemId") itemId: Int,
         @Body itemToCreate: CreateListItemDto
-    ): ListItemDto
+    )
+
+    @POST("/api/ListItem/setFinished/{itemId}")
+    suspend fun setItemFinished(@Path("itemId") itemId: Int, @Body isFinished: Boolean)
 
     @DELETE("/api/ListItem/{itemId}")
     suspend fun deleteItem(@Path("itemId") itemId: Int)

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
+import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.domain.StateReader
 import com.fansymasters.shoppinglist.list.details.usecase.DeleteListItemActions
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsActions
@@ -13,8 +14,7 @@ import com.fansymasters.shoppinglist.list.details.usecase.UpdateListItemActions
 import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,8 +23,9 @@ internal class ListDetailsViewModel @Inject constructor(
     private val fetchActions: FetchListDetailsActions,
     private val updateListItemActions: UpdateListItemActions,
     private val deleteItemActions: DeleteListItemActions,
-    private val fetchDetailsState: StateReader<FetchListDetailsState>,
     private val listNavigation: ListsNavigation,
+    fetchDetailsState: StateReader<FetchListDetailsState>,
+    updateListItemState: ProcessingStateReader<ListItemLocalDto>,
     savedState: SavedStateHandle,
 ) : ViewModel() {
 
@@ -34,10 +35,15 @@ internal class ListDetailsViewModel @Inject constructor(
         FetchListDetailsState(ProcessingState.Idle, emptyList())
     )
 
-    val listId = savedState.get<String>(NavigationRoutes.Lists.Arguments.LIST_ID)?.toInt() ?: -1
+    val listId =
+        savedState.get<String>(NavigationRoutes.Lists.Arguments.LIST_ID)?.toInt() ?: -1
 
     init {
         fetchDetails()
+        updateListItemState.state
+            .filterIsInstance<ProcessingState.Success<ListItemLocalDto>>()
+            .onEach { fetchDetails() }.launchIn(viewModelScope)
+
     }
 
     fun fetchDetails() {
@@ -46,7 +52,13 @@ internal class ListDetailsViewModel @Inject constructor(
         }
     }
 
-    fun deleteItem(listItemDto: ListItemLocalDto, finished: Boolean) {
+    fun setItemFinished(listItemDto: ListItemLocalDto) {
+        viewModelScope.launch {
+            updateListItemActions.setItemFinished(listItemDto)
+        }
+    }
+
+    fun deleteItem(listItemDto: ListItemLocalDto) {
         viewModelScope.launch {
             deleteItemActions.deleteItem(listItemDto.id)
         }

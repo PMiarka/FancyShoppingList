@@ -1,5 +1,6 @@
 package com.fansymasters.shoppinglist.list.overview.usecase
 
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
@@ -19,7 +20,7 @@ internal class FetchListsUserCase @Inject constructor(private val api: ListsApi)
 
     override suspend fun fetchLists() {
         state.value = ProcessingState.Processing
-        apiCall { api.fetchUserLists() }
+        apiCall(noMapper()) { api.fetchUserLists() }
             .onSuccess { state.value = ProcessingState.Success(it) }
             .onError { state.value = ProcessingState.Error(it) }
     }

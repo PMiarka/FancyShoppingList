@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -20,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.ui.components.FancyTopBar
-import com.fansymasters.shoppinglist.ui.theme.SPACING_L
+import com.fansymasters.shoppinglist.ui.theme.Corner
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 
 @Composable
@@ -39,8 +40,8 @@ private fun Content(
 ) {
 
     Scaffold(
-        topBar = { FancyTopBar("Lists", null) },
-        modifier = Modifier.padding(SPACING_L.dp)
+        topBar = { FancyTopBar(text = "My Lists") },
+        modifier = Modifier.padding(SPACING_S.dp)
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -49,40 +50,38 @@ private fun Content(
 
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(SPACING_S.dp)
             ) {
                 (state.value as? ProcessingState.Success<List<ListDto>>)?.data?.let { items ->
                     itemsIndexed(items) { index, item ->
+                        val rowBackground = MaterialTheme.colorScheme.secondaryContainer
                         Row(
                             modifier = Modifier
-                                .background(
-                                    if (index % 2 == 0) {
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    } else {
-                                        MaterialTheme.colorScheme.secondaryContainer
-                                    }
-                                )
-                                .fillMaxWidth()
-                                .padding(SPACING_S.dp)
                                 .clickable {
                                     viewModel.openListsDetails(item.id)
                                 }
+                                .background(
+                                    shape = RoundedCornerShape(Corner.M.dp),
+                                    color = rowBackground
+                                )
+                                .fillMaxWidth()
+                                .padding(SPACING_S.dp)
                         ) {
                             Text(
                                 text = item.name,
-                                style = MaterialTheme.typography.headlineMedium,
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.contentColorFor(rowBackground),
                                 modifier = Modifier.padding(horizontal = SPACING_S.dp)
                             )
+
                         }
                     }
                 }
             }
             FloatingButton(
                 onClick = viewModel::addList,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                modifier = Modifier.align(Alignment.BottomEnd)
             )
         }
     }

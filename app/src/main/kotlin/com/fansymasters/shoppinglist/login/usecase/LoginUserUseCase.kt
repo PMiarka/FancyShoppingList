@@ -1,5 +1,6 @@
 package com.fansymasters.shoppinglist.login.usecase
 
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.account.AccountApi
 import com.fansymasters.shoppinglist.data.account.LoginResponseDto
 import com.fansymasters.shoppinglist.data.account.LoginUserNormalRequestDto
@@ -21,7 +22,7 @@ internal class LoginUserUseCase @Inject constructor(private val api: AccountApi)
 
     override suspend fun loginUserGoogle(token: String) {
         state.value = ProcessingState.Processing
-        apiCall { api.loginUserGoogle(token) }
+        apiCall(noMapper()) { api.loginUserGoogle(token) }
             .onSuccess {
                 BearerToken.token = it.token
                 state.value = ProcessingState.Success(it)
@@ -31,7 +32,7 @@ internal class LoginUserUseCase @Inject constructor(private val api: AccountApi)
 
     override suspend fun loginUserNormal(username: String, password: String) {
         state.value = ProcessingState.Processing
-        apiCall { api.loginUserNormal(LoginUserNormalRequestDto(username, password)) }
+        apiCall(noMapper()) { api.loginUserNormal(LoginUserNormalRequestDto(username, password)) }
             .onSuccess {
                 BearerToken.token = it.token
                 state.value = ProcessingState.Success(it)

@@ -1,7 +1,7 @@
 package com.fansymasters.shoppinglist.list.di
 
 import com.fansymasters.shoppinglist.data.lists.ListDto
-import com.fansymasters.shoppinglist.data.lists.ListItemDto
+import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.domain.StateReader
 import com.fansymasters.shoppinglist.list.createlist.usecase.CreateListActions
@@ -50,7 +50,7 @@ internal class ListsViewModelModule {
 
     @Provides
     fun providesDeleteItemState(impl: UpdateListItemUseCase):
-            ProcessingStateReader<ListItemDto> = impl
+            ProcessingStateReader<ListItemLocalDto> = impl
 
     @Provides
     fun providesListNavigation(impl: ListNavigationImpl): ListsNavigation = impl

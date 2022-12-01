@@ -2,26 +2,26 @@
 
 package com.fansymasters.shoppinglist.list.details.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fansymasters.shoppinglist.domain.isProcessing
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
+import com.fansymasters.shoppinglist.ui.components.FancyTopBar
 import com.fansymasters.shoppinglist.ui.theme.SPACING_L
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 
@@ -39,38 +40,37 @@ internal fun ListDetailsScreen(
 ) {
     val state = viewModel.state.collectAsState()
 
-    Content(state, viewModel)
+    Content(state.value, viewModel)
 }
 
 @Composable
 private fun Content(
-    state: State<FetchListDetailsState>,
+    state: FetchListDetailsState,
     viewModel: ListDetailsViewModel
 ) {
-    Log.e("Piotrek", "isRefreshing: ${state.value.apiState.isProcessing()}")
     val pullRefreshState =
         rememberPullRefreshState(
-            refreshing = state.value.apiState.isProcessing(),
-            onRefresh = { viewModel.fetchDetails() })
+            refreshing = state.apiState.isProcessing(),
+            onRefresh = { viewModel.fetchDetails() },
+        )
 
-    Scaffold { paddingValues ->
-        Box(
-            modifier = Modifier
-                .pullRefresh(pullRefreshState)
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
+    Box(
+        modifier = Modifier
+            .pullRefresh(pullRefreshState)
+            .fillMaxSize()
+    ) {
+        Column {
+            FancyTopBar(text = "Title")
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(SPACING_S.dp)
+                    .fillMaxSize()
             ) {
-                state.value.items.let { items ->
+                state.items.let { items ->
                     itemsIndexed(items) { index, item ->
                         val dismissState = rememberDismissState(
                             confirmStateChange = {
                                 if (it == DismissValue.DismissedToStart) {
-                                    viewModel.deleteItem(item, true)
+                                    viewModel.deleteItem(item)
                                 }
                                 true
                             }
@@ -88,37 +88,46 @@ private fun Content(
                                         .background(Color.Red)
                                 )
                             }) {
+                            val rowColor = MaterialTheme.colorScheme.secondaryContainer
                             Row(
                                 modifier = Modifier
-                                    .background(
-                                        if (index % 2 == 0) {
-                                            MaterialTheme.colorScheme.primaryContainer
-                                        } else {
-                                            MaterialTheme.colorScheme.secondaryContainer
-                                        }
-                                    )
+                                    .clickable { viewModel.setItemFinished(item) }
+                                    .background(rowColor)
                                     .fillMaxWidth()
-                                    .padding(SPACING_S.dp)
+                                    .padding(horizontal = SPACING_L.dp, vertical = SPACING_S.dp)
                             ) {
+                                val iconColor = if (item.finished) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.contentColorFor(rowColor)
+                                }
+                                Icon(
+                                    Icons.Default.CheckCircle,
+                                    tint = iconColor,
+                                    contentDescription = ""
+                                )
                                 Text(text = item.name, modifier = Modifier)
                                 Text(text = item.category, modifier = Modifier)
                             }
                         }
+                        Divider(
+                            color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.12f)
+                        ).takeIf { index != items.size }
                     }
                 }
             }
-            PullRefreshIndicator(
-                refreshing = state.value.apiState.isProcessing(),
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-            FloatingButton(
-                onClick = viewModel::addItem,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(SPACING_L.dp)
-            )
         }
+        PullRefreshIndicator(
+            refreshing = state.apiState.isProcessing(),
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+        FloatingButton(
+            onClick = viewModel::addItem,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(SPACING_L.dp)
+        )
     }
 }
 

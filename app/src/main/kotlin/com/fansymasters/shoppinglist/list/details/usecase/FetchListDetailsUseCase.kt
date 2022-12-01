@@ -1,6 +1,6 @@
 package com.fansymasters.shoppinglist.list.details.usecase
 
-import android.util.Log
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.onError
 import com.fansymasters.shoppinglist.data.onSuccess
@@ -19,13 +19,12 @@ internal class FetchListDetailsUseCase @Inject constructor(private val repositor
     private val apiState = MutableStateFlow<ProcessingState<Unit>>(ProcessingState.Idle)
 
     override val state = repository.localState.combine(apiState) { localState, apiState ->
-        Log.e("Piotrek", "$localState, $apiState")
         FetchListDetailsState(apiState, localState)
     }
 
     override suspend fun fetchListDetails(listId: Int) {
         apiState.value = ProcessingState.Processing
-        apiCall { repository.fetchListItems(listId) }
+        apiCall(noMapper()) { repository.fetchListItems(listId) }
             .onSuccess { apiState.value = ProcessingState.Success(Unit) }
             .onError { apiState.value = ProcessingState.Error(it) }
     }

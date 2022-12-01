@@ -1,5 +1,6 @@
 package com.fansymasters.shoppinglist.list.createlist.usecase
 
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.CreateListDto
 import com.fansymasters.shoppinglist.data.lists.ListDto
@@ -24,7 +25,14 @@ internal class CreateListUseCase @Inject constructor(
 
     override suspend fun createList(name: String, description: String) {
         state.value = ProcessingState.Processing
-        apiCall { api.createList(CreateListDto(name = name, description = description)) }
+        apiCall(noMapper()) {
+            api.createList(
+                CreateListDto(
+                    name = name,
+                    description = description
+                )
+            )
+        }
             .onSuccess { state.value = ProcessingState.Success(it) }
             .onError { state.value = ProcessingState.Error(it) }
     }
