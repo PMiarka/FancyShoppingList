@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class FetchListDetailsUseCase @Inject constructor(private val repository: ListDetailsRepository) :
-    StateReader<FetchListDetailsState>,
+internal class FetchListDetailsUseCase @Inject constructor(
+    private val repository: ListDetailsRepository
+) : StateReader<FetchListDetailsState>,
     FetchListDetailsActions {
     private val apiState = MutableStateFlow<ProcessingState<Unit>>(ProcessingState.Idle)
 
