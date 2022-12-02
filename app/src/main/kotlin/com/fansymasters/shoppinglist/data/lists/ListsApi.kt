@@ -1,9 +1,6 @@
 package com.fansymasters.shoppinglist.data.lists
 
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 internal interface ListsApi {
 
@@ -21,4 +18,16 @@ internal interface ListsApi {
         @Path("listId") listId: Int,
         @Body itemToCreate: CreateListItemDto
     ): ListItemDto
+
+    @PUT("/api/ListItem/{itemId}")
+    suspend fun updateItem(
+        @Path("itemId") itemId: Int,
+        @Body itemToCreate: CreateListItemDto
+    )
+
+    @POST("/api/ListItem/setFinished/{itemId}")
+    suspend fun setItemFinished(@Path("itemId") itemId: Int, @Body isFinished: Boolean)
+
+    @DELETE("/api/ListItem/{itemId}")
+    suspend fun deleteItem(@Path("itemId") itemId: Int)
 }

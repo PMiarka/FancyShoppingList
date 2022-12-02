@@ -1,6 +1,7 @@
 package com.fansymasters.shoppinglist.login.usecase
 
 import android.util.Log
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.account.AccountApi
 import com.fansymasters.shoppinglist.data.account.RegisterUserRequestDto
 import com.fansymasters.shoppinglist.data.apiCall
@@ -14,7 +15,7 @@ internal class RegisterUserGoogleUseCase @Inject constructor(private val api: Ac
     RegisterUserGoogleActions {
 
     override suspend fun registerUserGoogle(token: String) {
-        apiCall { api.registrationGoogle(token) }
+        apiCall(noMapper()) { api.registrationGoogle(token) }
             .onSuccess { Log.e("-->", "$it") }
             .onError { Log.e("-->", "error: $it") }
     }
@@ -25,7 +26,7 @@ internal class RegisterUserGoogleUseCase @Inject constructor(private val api: Ac
         name: String,
         email: String
     ) {
-        apiCall {
+        apiCall(noMapper()) {
             api.registrationNormal(
                 RegisterUserRequestDto(
                     userName = username,

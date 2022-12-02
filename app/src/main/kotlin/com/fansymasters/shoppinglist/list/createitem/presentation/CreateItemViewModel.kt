@@ -6,8 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.fansymasters.shoppinglist.data.lists.di.Category
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.list.createitem.di.CreateItem
 import com.fansymasters.shoppinglist.list.createitem.usecase.CreateItemActions
 import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
+import com.fansymasters.shoppinglist.presentation.UiEvent
+import com.fansymasters.shoppinglist.presentation.UiEventStateWriter
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterIsInstance
@@ -19,8 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 internal class CreateItemViewModel @Inject constructor(
     private val createItemActions: CreateItemActions,
-    private val processingState: ProcessingStateReader<Unit>,
+    @CreateItem private val processingState: ProcessingStateReader<Unit>,
     private val listsNavigation: ListsNavigation,
+    private val uiEventStateWriter: UiEventStateWriter,
     savedState: SavedStateHandle,
 ) : ViewModel(), ProcessingStateReader<Unit> by processingState {
     private val listId =
@@ -28,12 +32,8 @@ internal class CreateItemViewModel @Inject constructor(
 
     init {
         state.filterIsInstance<ProcessingState.Success<Unit>>()
-            .onEach { navigateUp() }
+            .onEach { uiEventStateWriter.sendEvent(UiEvent.ShowToast("Successfully Added")) }
             .launchIn(viewModelScope)
-    }
-
-    fun navigateUp() {
-        listsNavigation.navigateUp()
     }
 
     fun createItem(name: String, unit: String, quantity: Int, category: Category) {

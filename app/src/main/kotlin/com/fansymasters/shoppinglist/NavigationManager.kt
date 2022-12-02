@@ -6,14 +6,14 @@ import javax.inject.Singleton
 
 @Singleton
 internal class NavigationManager @Inject constructor() : NavigationReader, NavigationWriter {
-    override val state = MutableSharedFlow<NavigationCommand>(extraBufferCapacity = 2)
+    override val navigationState = MutableSharedFlow<NavigationCommand>(extraBufferCapacity = 2)
 
     override fun navigate(path: String) {
-        state.tryEmit(NavigationCommand.Route(path))
+        navigationState.tryEmit(NavigationCommand.Route(path))
     }
 
     override fun navigateUp() {
-        state.tryEmit(NavigationCommand.NavigateUp)
+        navigationState.tryEmit(NavigationCommand.NavigateUp)
     }
 }
 

@@ -1,23 +1,36 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 
 package com.fansymasters.shoppinglist.list.details.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.*
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fansymasters.shoppinglist.data.lists.ListDetailsDto
-import com.fansymasters.shoppinglist.domain.ProcessingState
+import com.fansymasters.shoppinglist.domain.isProcessing
+import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
 import com.fansymasters.shoppinglist.ui.components.FancyTopBar
 import com.fansymasters.shoppinglist.ui.theme.SPACING_L
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
@@ -28,55 +41,110 @@ internal fun ListDetailsScreen(
 ) {
     val state = viewModel.state.collectAsState()
 
-    Content(state, viewModel)
+    Content(state.value, viewModel)
 }
 
 @Composable
-private fun Content(
-    state: State<ProcessingState<ListDetailsDto>>,
-    viewModel: ListDetailsViewModel
-) {
-    val successState = (state.value as? ProcessingState.Success<ListDetailsDto>)
-    Scaffold(
-        topBar = { FancyTopBar(successState?.data?.name ?: "", null) },
-        modifier = Modifier.padding(vertical = SPACING_L.dp)
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-        ) {
+private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewModel) {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.apiState.isProcessing(),
+        onRefresh = { viewModel.fetchDetails() },
+    )
+
+    Box(
+        modifier = Modifier
+            .pullRefresh(pullRefreshState)
+            .fillMaxSize()
+    ) {
+        Column {
+            FancyTopBar(
+                text = state.details.name,
+                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+            )
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(SPACING_S.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
-                successState?.data?.shopListItems?.let { items ->
+                state.details.shopListItems.let { items ->
                     itemsIndexed(items) { index, item ->
-                        Row(
-                            modifier = Modifier
-                                .background(
-                                    if (index % 2 == 0) {
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    } else {
-                                        MaterialTheme.colorScheme.secondaryContainer
-                                    }
-                                )
-                                .fillMaxWidth()
-                                .padding(SPACING_S.dp)
-                        ) {
-                            Text(text = item.name, modifier = Modifier)
-                            Text(text = item.category, modifier = Modifier)
+                        val dismissState = rememberDismissState(confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                viewModel.deleteItem(item)
+                            }
+                            true
+                        })
+                        LaunchedEffect(key1 = item.id) {
+                            dismissState.reset()
                         }
+                        SwipeToDismiss(state = dismissState,
+                            directions = setOf(DismissDirection.EndToStart),
+                            background = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Color.Red)
+                                )
+                            }) {
+                            val rowColor = if (item.finished) {
+                                MaterialTheme.colorScheme.background
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            }
+
+                            Row(modifier = Modifier
+                                .clickable { viewModel.setItemFinished(item) }
+                                .background(rowColor)
+                                .fillMaxWidth()
+                                .padding(horizontal = SPACING_L.dp, vertical = SPACING_S.dp)) {
+                                val iconColor = if (item.finished) {
+                                    MaterialTheme.colorScheme.tertiary
+                                } else {
+                                    MaterialTheme.colorScheme.secondary
+                                }
+                                val textColor = if (item.finished) {
+                                    MaterialTheme.colorScheme.outline
+                                } else {
+                                    MaterialTheme.colorScheme.onBackground
+                                }
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    tint = iconColor,
+                                    contentDescription = "",
+                                    modifier = Modifier.padding(end = SPACING_S.dp)
+                                )
+                                Text(
+                                    text = item.name,
+                                    color = textColor,
+                                    modifier = Modifier
+                                )
+                                Text(
+                                    text = item.category,
+                                    color = textColor,
+                                    modifier = Modifier
+                                )
+                            }
+                        }
+                        Divider(
+                            color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.12f)
+                        ).takeIf { index != items.size }
                     }
                 }
             }
-            FloatingButton(
-                onClick = viewModel::addItem,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-            )
         }
+        PullRefreshIndicator(
+            refreshing = state.apiState.isProcessing(),
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+        FloatingButton(
+            onClick = viewModel::addItem,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(SPACING_L.dp)
+                .background(
+                    shape = FloatingActionButtonDefaults.shape,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+        )
     }
 }
 

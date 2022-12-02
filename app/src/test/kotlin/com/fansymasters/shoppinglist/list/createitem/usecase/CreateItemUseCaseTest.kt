@@ -1,12 +1,13 @@
 package com.fansymasters.shoppinglist.list.createitem.usecase
 
 import app.cash.turbine.test
+import com.fansymasters.shoppinglist.data.ApiResult
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
-import com.fansymasters.shoppinglist.data.lists.ListsApi
-import com.fansymasters.shoppinglist.data.lists.di.Category
+import com.fansymasters.shoppinglist.data.lists.di.mapToCategory
 import com.fansymasters.shoppinglist.domain.FancyError
 import com.fansymasters.shoppinglist.domain.ProcessingState
+import com.fansymasters.shoppinglist.list.createitem.domain.CreateListItemRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -15,8 +16,8 @@ import org.junit.Test
 
 internal class CreateItemUseCaseTest {
 
-    private val mockedListApi: ListsApi = mockk(relaxed = true)
-    private val useCase get() = CreateItemUseCase(mockedListApi)
+    private val mockedRepository: CreateListItemRepository = mockk(relaxed = true)
+    private val useCase get() = CreateItemUseCase(mockedRepository)
     private val item = CreateListItemDto(
         name = "name",
         qty = 1,
@@ -35,6 +36,7 @@ internal class CreateItemUseCaseTest {
         category = "VegAndFruits",
         finished = false
     )
+    private val listId = 0
 
     @Test
     fun `on init should return idle`() = runTest {
@@ -50,7 +52,16 @@ internal class CreateItemUseCaseTest {
     @Test
     fun `on create item should return Success`() = runTest {
         // give
-        coEvery { mockedListApi.createItem(0, item) } returns responseItem
+
+        coEvery {
+            mockedRepository.createListItem(
+                listId = listId,
+                name = item.name,
+                unit = item.unit,
+                quantity = item.qty,
+                category = item.category.mapToCategory()
+            )
+        } returns ApiResult.Success(Unit)
         val expected =
             listOf(
                 ProcessingState.Idle,
@@ -62,7 +73,13 @@ internal class CreateItemUseCaseTest {
 
         // when-then
         testedUseCase.state.test {
-            testedUseCase.createItem("name", "unit", 0, Category.OTHER, 1)
+            testedUseCase.createItem(
+                listId = listId,
+                name = item.name,
+                unit = item.unit,
+                quantity = item.qty,
+                category = item.category.mapToCategory()
+            )
 
             expected.forEach {
                 assertEquals(it, awaitItem())
@@ -73,7 +90,15 @@ internal class CreateItemUseCaseTest {
     @Test
     fun `on create item should return Error`() = runTest {
         // give
-        coEvery { mockedListApi.createItem(any(), any()) } throws IllegalStateException("")
+        coEvery {
+            mockedRepository.createListItem(
+                listId = listId,
+                name = item.name,
+                unit = item.unit,
+                quantity = item.qty,
+                category = item.category.mapToCategory()
+            )
+        } throws IllegalStateException("")
         val expected =
             listOf(
                 ProcessingState.Idle,
@@ -85,7 +110,13 @@ internal class CreateItemUseCaseTest {
 
         // when-then
         testedUseCase.state.test {
-            testedUseCase.createItem("name", "unit", 0, Category.OTHER, 1)
+            testedUseCase.createItem(
+                listId = listId,
+                name = item.name,
+                unit = item.unit,
+                quantity = item.qty,
+                category = item.category.mapToCategory()
+            )
 
             expected.forEach {
                 assertEquals(it, awaitItem())

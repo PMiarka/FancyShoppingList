@@ -28,7 +28,7 @@ internal fun CreateListScreen(viewModel: CreateListViewModel = hiltViewModel()) 
     val nameState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
     Scaffold(
-        topBar = { FancyTopBar("Create List", viewModel::navigateUp) }
+        topBar = { FancyTopBar("Create List", onBackClick = viewModel::navigateUp) }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(SPACING_M.dp),

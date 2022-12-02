@@ -2,7 +2,9 @@ package com.fansymasters.shoppinglist.login
 
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -60,6 +62,7 @@ internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(SPACING_M.dp),
         verticalArrangement = Arrangement.Center,

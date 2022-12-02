@@ -8,3 +8,6 @@ enum class Category(val apiKey: String) {
     SPICES("Spices"),
     OTHER("Other")
 }
+
+fun String.mapToCategory(): Category =
+    Category.values().firstOrNull { it.apiKey.uppercase() == this } ?: Category.OTHER
