@@ -15,8 +15,7 @@ import javax.inject.Inject
 @ViewModelScoped
 internal class CreateItemUseCase @Inject constructor(
     private val repository: CreateListItemRepository
-) :
-    ProcessingStateReader<Unit>,
+) : ProcessingStateReader<Unit>,
     CreateItemActions {
     override val state = MutableStateFlow<ProcessingState<Unit>>(ProcessingState.Idle)
 

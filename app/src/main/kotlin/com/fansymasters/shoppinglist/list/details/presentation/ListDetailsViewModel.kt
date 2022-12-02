@@ -3,10 +3,12 @@ package com.fansymasters.shoppinglist.list.details.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.data.room.ListDetailsLocalDto
 import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.domain.StateReader
+import com.fansymasters.shoppinglist.list.createitem.di.DeleteItem
 import com.fansymasters.shoppinglist.list.details.usecase.DeleteListItemActions
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsActions
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
@@ -24,6 +26,7 @@ internal class ListDetailsViewModel @Inject constructor(
     private val updateListItemActions: UpdateListItemActions,
     private val deleteItemActions: DeleteListItemActions,
     private val listNavigation: ListsNavigation,
+    @DeleteItem deleteStateReader: ProcessingStateReader<Unit>,
     fetchDetailsState: StateReader<FetchListDetailsState>,
     updateListItemState: ProcessingStateReader<ListItemLocalDto>,
     savedState: SavedStateHandle,
@@ -32,7 +35,10 @@ internal class ListDetailsViewModel @Inject constructor(
     val state = fetchDetailsState.state.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
-        FetchListDetailsState(ProcessingState.Idle, emptyList())
+        FetchListDetailsState(
+            ProcessingState.Idle,
+            ListDetailsLocalDto("", 0, "", emptyList(), emptyList())
+        )
     )
 
     val listId =
@@ -42,8 +48,12 @@ internal class ListDetailsViewModel @Inject constructor(
         fetchDetails()
         updateListItemState.state
             .filterIsInstance<ProcessingState.Success<ListItemLocalDto>>()
-            .onEach { fetchDetails() }.launchIn(viewModelScope)
-
+            .onEach { fetchDetails() }
+            .launchIn(viewModelScope)
+        deleteStateReader.state
+            .filterIsInstance<ProcessingState.Success<Unit>>()
+            .onEach { fetchDetails() }
+            .launchIn(viewModelScope)
     }
 
     fun fetchDetails() {

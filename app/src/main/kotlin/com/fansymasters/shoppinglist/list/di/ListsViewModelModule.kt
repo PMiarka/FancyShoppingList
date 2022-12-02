@@ -4,6 +4,7 @@ import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.domain.StateReader
+import com.fansymasters.shoppinglist.list.createitem.di.DeleteItem
 import com.fansymasters.shoppinglist.list.createlist.usecase.CreateListActions
 import com.fansymasters.shoppinglist.list.createlist.usecase.CreateListUseCase
 import com.fansymasters.shoppinglist.list.details.usecase.*
@@ -47,6 +48,10 @@ internal class ListsViewModelModule {
 
     @Provides
     fun provideDeleteItemActions(impl: DeleteListItemUseCase): DeleteListItemActions = impl
+
+    @Provides
+    @DeleteItem
+    fun provideDeleteStateReader(impl: DeleteListItemUseCase): ProcessingStateReader<Unit> = impl
 
     @Provides
     fun providesDeleteItemState(impl: UpdateListItemUseCase):

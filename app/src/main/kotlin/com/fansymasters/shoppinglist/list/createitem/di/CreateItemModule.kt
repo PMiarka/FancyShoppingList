@@ -14,6 +14,7 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 internal interface CreateItemModule {
     @Binds
+    @CreateItem
     fun bindsCreateItemState(impl: CreateItemUseCase): ProcessingStateReader<Unit>
 
     @Binds

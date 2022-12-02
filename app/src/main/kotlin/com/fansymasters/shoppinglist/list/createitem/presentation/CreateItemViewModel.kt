@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.fansymasters.shoppinglist.data.lists.di.Category
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.list.createitem.di.CreateItem
 import com.fansymasters.shoppinglist.list.createitem.usecase.CreateItemActions
 import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
 import com.fansymasters.shoppinglist.presentation.UiEvent
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class CreateItemViewModel @Inject constructor(
     private val createItemActions: CreateItemActions,
-    private val processingState: ProcessingStateReader<Unit>,
+    @CreateItem private val processingState: ProcessingStateReader<Unit>,
     private val listsNavigation: ListsNavigation,
     private val uiEventStateWriter: UiEventStateWriter,
     savedState: SavedStateHandle,

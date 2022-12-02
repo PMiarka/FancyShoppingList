@@ -17,6 +17,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,15 +45,11 @@ internal fun ListDetailsScreen(
 }
 
 @Composable
-private fun Content(
-    state: FetchListDetailsState,
-    viewModel: ListDetailsViewModel
-) {
-    val pullRefreshState =
-        rememberPullRefreshState(
-            refreshing = state.apiState.isProcessing(),
-            onRefresh = { viewModel.fetchDetails() },
-        )
+private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewModel) {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.apiState.isProcessing(),
+        onRefresh = { viewModel.fetchDetails() },
+    )
 
     Box(
         modifier = Modifier
@@ -60,26 +57,25 @@ private fun Content(
             .fillMaxSize()
     ) {
         Column {
-            FancyTopBar(text = "Title")
+            FancyTopBar(
+                text = state.details.name,
+                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+            )
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
-                state.items.let { items ->
+                state.details.shopListItems.let { items ->
                     itemsIndexed(items) { index, item ->
-                        val dismissState = rememberDismissState(
-                            confirmStateChange = {
-                                if (it == DismissValue.DismissedToStart) {
-                                    viewModel.deleteItem(item)
-                                }
-                                true
+                        val dismissState = rememberDismissState(confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                viewModel.deleteItem(item)
                             }
-                        )
+                            true
+                        })
                         LaunchedEffect(key1 = item.id) {
                             dismissState.reset()
                         }
-                        SwipeToDismiss(
-                            state = dismissState,
+                        SwipeToDismiss(state = dismissState,
                             directions = setOf(DismissDirection.EndToStart),
                             background = {
                                 Box(
@@ -88,26 +84,43 @@ private fun Content(
                                         .background(Color.Red)
                                 )
                             }) {
-                            val rowColor = MaterialTheme.colorScheme.secondaryContainer
-                            Row(
-                                modifier = Modifier
-                                    .clickable { viewModel.setItemFinished(item) }
-                                    .background(rowColor)
-                                    .fillMaxWidth()
-                                    .padding(horizontal = SPACING_L.dp, vertical = SPACING_S.dp)
-                            ) {
+                            val rowColor = if (item.finished) {
+                                MaterialTheme.colorScheme.background
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            }
+
+                            Row(modifier = Modifier
+                                .clickable { viewModel.setItemFinished(item) }
+                                .background(rowColor)
+                                .fillMaxWidth()
+                                .padding(horizontal = SPACING_L.dp, vertical = SPACING_S.dp)) {
                                 val iconColor = if (item.finished) {
-                                    MaterialTheme.colorScheme.primary
+                                    MaterialTheme.colorScheme.tertiary
                                 } else {
-                                    MaterialTheme.colorScheme.contentColorFor(rowColor)
+                                    MaterialTheme.colorScheme.secondary
+                                }
+                                val textColor = if (item.finished) {
+                                    MaterialTheme.colorScheme.outline
+                                } else {
+                                    MaterialTheme.colorScheme.onBackground
                                 }
                                 Icon(
-                                    Icons.Default.CheckCircle,
+                                    imageVector = Icons.Default.CheckCircle,
                                     tint = iconColor,
-                                    contentDescription = ""
+                                    contentDescription = "",
+                                    modifier = Modifier.padding(end = SPACING_S.dp)
                                 )
-                                Text(text = item.name, modifier = Modifier)
-                                Text(text = item.category, modifier = Modifier)
+                                Text(
+                                    text = item.name,
+                                    color = textColor,
+                                    modifier = Modifier
+                                )
+                                Text(
+                                    text = item.category,
+                                    color = textColor,
+                                    modifier = Modifier
+                                )
                             }
                         }
                         Divider(
@@ -127,6 +140,10 @@ private fun Content(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(SPACING_L.dp)
+                .background(
+                    shape = FloatingActionButtonDefaults.shape,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
         )
     }
 }

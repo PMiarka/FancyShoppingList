@@ -2,7 +2,6 @@ package com.fansymasters.shoppinglist.list.details.usecase
 
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.lists.ListItemDto
 import com.fansymasters.shoppinglist.data.onError
 import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.domain.ProcessingState
@@ -14,14 +13,14 @@ import javax.inject.Inject
 
 @ViewModelScoped
 internal class DeleteListItemUseCase @Inject constructor(private val repository: ListDetailsRepository) :
-    ProcessingStateReader<ListItemDto>,
+    ProcessingStateReader<Unit>,
     DeleteListItemActions {
-    override val state = MutableStateFlow<ProcessingState<ListItemDto>>(ProcessingState.Idle)
+    override val state = MutableStateFlow<ProcessingState<Unit>>(ProcessingState.Idle)
 
     override suspend fun deleteItem(itemId: Int) {
         state.value = ProcessingState.Processing
         apiCall(noMapper()) { repository.deleteItem(itemId) }
-            .onSuccess { state.value = ProcessingState.Idle }
+            .onSuccess { state.value = ProcessingState.Success(Unit) }
             .onError { state.value = ProcessingState.Error(it) }
     }
 }

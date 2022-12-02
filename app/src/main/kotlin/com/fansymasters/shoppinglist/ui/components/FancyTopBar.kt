@@ -14,9 +14,13 @@ import com.fansymasters.shoppinglist.ui.theme.SPACING_M
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 
 @Composable
-internal fun FancyTopBar(text: String, onBackClick: (() -> Unit)? = null) {
+internal fun FancyTopBar(
+    text: String,
+    modifier: Modifier = Modifier,
+    onBackClick: (() -> Unit)? = null
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(SPACING_M.dp)
     ) {

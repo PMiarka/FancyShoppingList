@@ -6,9 +6,11 @@ import com.fansymasters.shoppinglist.common.unitMapper
 import com.fansymasters.shoppinglist.data.ApiResult
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
+import com.fansymasters.shoppinglist.data.lists.ListDetailsDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
 import com.fansymasters.shoppinglist.data.onSuccessSuspend
+import com.fansymasters.shoppinglist.data.room.ListDetailsLocalDto
 import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 import com.fansymasters.shoppinglist.data.toUnit
 import com.fansymasters.shoppinglist.list.domain.ListDetailsRepository
@@ -19,14 +21,17 @@ import javax.inject.Singleton
 @Singleton
 internal class ListDetailsRepositoryImpl @Inject constructor(
     private val api: ListsApi,
-    private val mapper: Mapper<ListItemDto, ListItemLocalDto>
+    private val listItemMapper: Mapper<ListItemDto, ListItemLocalDto>,
+    private val detailsMapper: Mapper<ListDetailsDto, ListDetailsLocalDto>,
 ) : ListDetailsRepository {
-    override val localState = MutableSharedFlow<List<ListItemLocalDto>>()
+    override val localState = MutableSharedFlow<ListDetailsLocalDto>()
 
     override suspend fun fetchListItems(listId: Int): ApiResult<Unit> =
         apiCall(noMapper()) { api.fetchListDetails(listId) }
-            .onSuccessSuspend {
-                localState.emit(it.shopListItems.map { mapper.map(it) })
+            .onSuccessSuspend { details ->
+                val sortedDetails =
+                    details.copy(shopListItems = details.shopListItems.sortedBy { it.finished })
+                localState.emit(detailsMapper.map(sortedDetails))
             }
             .toUnit()
 

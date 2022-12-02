@@ -1,11 +1,10 @@
-package com.fansymasters.shoppinglist.list.domain
+package com.fansymasters.shoppinglist.data.room
 
 import com.fansymasters.shoppinglist.common.Mapper
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
-import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 import javax.inject.Inject
 
-internal class ListItemDtoMapper @Inject constructor() : Mapper<ListItemDto, ListItemLocalDto> {
+internal class ListItemMapper @Inject constructor() : Mapper<ListItemDto, ListItemLocalDto> {
     override fun map(from: ListItemDto): ListItemLocalDto = with(from) {
         ListItemLocalDto(
             id = id,
