@@ -1,7 +1,7 @@
 package com.fansymasters.shoppinglist.list.createitem.domain
 
 import com.fansymasters.shoppinglist.data.ApiResult
-import com.fansymasters.shoppinglist.data.lists.di.Category
+import com.fansymasters.shoppinglist.data.lists.Category
 
 internal interface CreateListItemRepository {
     suspend fun createListItem(

@@ -2,7 +2,7 @@ package com.fansymasters.shoppinglist.list.createitem.usecase
 
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.lists.di.Category
+import com.fansymasters.shoppinglist.data.lists.Category
 import com.fansymasters.shoppinglist.data.onError
 import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.domain.ProcessingState

@@ -3,7 +3,7 @@ package com.fansymasters.shoppinglist.list.createitem.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fansymasters.shoppinglist.data.lists.di.Category
+import com.fansymasters.shoppinglist.data.lists.Category
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.list.createitem.di.CreateItem

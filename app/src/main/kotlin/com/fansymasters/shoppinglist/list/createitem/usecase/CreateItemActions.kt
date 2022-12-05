@@ -1,6 +1,7 @@
 package com.fansymasters.shoppinglist.list.createitem.usecase
 
-import com.fansymasters.shoppinglist.data.lists.di.Category
+import com.fansymasters.shoppinglist.data.lists.Category
+
 
 internal interface CreateItemActions {
     suspend fun createItem(
