@@ -1,5 +1,5 @@
-name: Build&Tests
-run-name: ${{ github.actor }} created PR ${{ github.ref_name }} build and tests are about to start
+name: Build&Deploy
+run-name: ${{ github.actor }} Merged PR to develop, build and deploy was triggered
 env:
   API_URL: ${{ secrets.API_URL }}
   GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
@@ -12,7 +12,8 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
       - run: echo apiUrl=\"$API_URL\" > ./secret.properties
-      - run: echo ciVersionCode=\"${{ github.run_number }}\" > ./secret.properties
+      - run: echo ${{ github.run_number }}
+      - run: echo ciVersionCode=${{ github.run_number }} > ./secret.properties
       - run: echo $GOOGLE_SERVICES > ./app/google-services.json
       - name: Build the app
         run: ./gradlew assembleDebug
