@@ -233,6 +233,7 @@ fun DependencyHandlerScope.uiTestImplementation() {
 }
 
 fun getSecretProperty(key: String): String {
+    System.out.println("getSecretProperty: $key")
     val fis = FileInputStream("$rootDir/secret.properties")
     val prop = Properties()
     prop.load(fis)
