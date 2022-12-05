@@ -1,0 +1,25 @@
+name: Build&Tests
+run-name: ${{ github.actor }} created PR ${{ github.ref_name }} build and tests are about to start
+env:
+  API_URL: ${{ secrets.API_URL }}
+  GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+on: [ pull_request, push ]
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build started."
+      - name: Checkout the code
+        uses: actions/checkout@v3
+      - run: echo apiUrl=\"$API_URL\" > ./secret.properties
+      - run: echo ciVersionCode=\"${{ github.run_number }}\" > ./secret.properties
+      - run: echo $GOOGLE_SERVICES > ./app/google-services.json
+      - name: Build the app
+        run: ./gradlew assembleDebug
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: testers
+          file: app/build/outputs/apk/release/app-release-unsigned.apk

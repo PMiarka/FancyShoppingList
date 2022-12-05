@@ -16,10 +16,16 @@ android {
     compileSdk = 33
 
     defaultConfig {
+        val currentVersionCode =
+            if (System.getenv("CI") != null) {
+                getSecretProperty("ciVersionCode").toInt()
+            } else {
+                1
+            }
         applicationId = "com.fansymasters.shoppinglist"
         minSdk = 27
         targetSdk = 33
-        versionCode = 1
+        versionCode = currentVersionCode
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
