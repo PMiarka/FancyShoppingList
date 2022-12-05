@@ -10,3 +10,9 @@ object Corner {
     const val M = 8
     const val L = 12
 }
+
+object Grid {
+    object Column {
+        const val M = 64
+    }
+}

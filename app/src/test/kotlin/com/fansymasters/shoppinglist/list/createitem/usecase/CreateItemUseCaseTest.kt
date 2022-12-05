@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import com.fansymasters.shoppinglist.data.ApiResult
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
-import com.fansymasters.shoppinglist.data.lists.di.mapToCategory
+import com.fansymasters.shoppinglist.data.lists.mapToCategory
 import com.fansymasters.shoppinglist.domain.FancyError
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.list.createitem.domain.CreateListItemRepository

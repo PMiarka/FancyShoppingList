@@ -79,7 +79,7 @@ val composeVersion = "1.3.1"
 dependencies {
     composeImplementation()
     composeNavigationImplementation()
-    accompanistPermissionsImplementation()
+    accompanistImplementation()
 
     androidxCoreKtxImplementation()
 
@@ -134,9 +134,10 @@ fun DependencyHandlerScope.composeNavigationImplementation() {
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 }
 
-fun DependencyHandlerScope.accompanistPermissionsImplementation() {
-    val accompanistVersion = "0.27.0"
+fun DependencyHandlerScope.accompanistImplementation() {
+    val accompanistVersion = "0.28.0"
     implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
 }
 
 fun DependencyHandlerScope.androidxCoreKtxImplementation() {

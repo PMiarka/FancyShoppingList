@@ -3,9 +3,9 @@ package com.fansymasters.shoppinglist.list.createitem.data
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.ApiResult
 import com.fansymasters.shoppinglist.data.apiCall
+import com.fansymasters.shoppinglist.data.lists.Category
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
-import com.fansymasters.shoppinglist.data.lists.di.Category
 import com.fansymasters.shoppinglist.data.toUnit
 import com.fansymasters.shoppinglist.list.createitem.domain.CreateListItemRepository
 import javax.inject.Inject
