@@ -3,7 +3,8 @@ run-name: ${{ github.actor }} Merged PR to develop, build and deploy was trigger
 env:
   API_URL: ${{ secrets.API_URL }}
   GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
-on: [ pull_request, push ]
+on:
+  pull_request:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -11,9 +12,9 @@ jobs:
       - run: echo "Build started."
       - name: Checkout the code
         uses: actions/checkout@v3
-      - run: echo apiUrl=\"$API_URL\" > ./secret.properties
+      - run: echo apiUrl=\"$API_URL\" >> ./secret.properties
       - run: echo ${{ github.run_number }}
-      - run: echo ciVersionCode=${{ github.run_number }} > ./secret.properties
+      - run: echo ciVersionCode=${{ github.run_number }} >> ./secret.properties
       - run: echo $GOOGLE_SERVICES > ./app/google-services.json
       - name: Build the app
         run: ./gradlew bundleDebug
