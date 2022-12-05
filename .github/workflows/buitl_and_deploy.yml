@@ -4,7 +4,9 @@ env:
   API_URL: ${{ secrets.API_URL }}
   GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
 on:
-  pull_request:
+  push:
+    branches:
+      - 'develop'
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -24,4 +26,4 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: testers
-          file: app/build/outputs/apk/debug/app-debug.aab
+          file: app/build/outputs/apk/debug/app-debug.apk
