@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.fansymasters.shoppinglist.list.ListsGraphBuilder
 import com.fansymasters.shoppinglist.login.AuthenticationGraphBuilder
 import com.fansymasters.shoppinglist.presentation.UiEvent
+import com.fansymasters.shoppinglist.searchuser.navigation.UsersGraphBuilder
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import com.fansymasters.shoppinglist.ui.theme.FancyShoppingListTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +29,7 @@ internal class MainActivity : ComponentActivity() {
 
     private val authenticationGraphBuilder = AuthenticationGraphBuilder()
     private val listsGraphBuilder = ListsGraphBuilder()
+    private val usersGraphBuilder = UsersGraphBuilder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +71,7 @@ internal class MainActivity : ComponentActivity() {
                     ) {
                         authenticationGraphBuilder.buildGraph(this)
                         listsGraphBuilder.buildGraph(this)
+                        usersGraphBuilder.buildGraph(this)
                     }
                 }
             }

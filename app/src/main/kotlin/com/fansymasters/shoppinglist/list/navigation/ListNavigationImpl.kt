@@ -18,7 +18,7 @@ internal class ListNavigationImpl @Inject constructor(
 
     override fun openListDetails(listId: Int) {
         val route = NavigationRoutes.Lists.Details.setIntArgument(
-            key = NavigationRoutes.Lists.Arguments.LIST_ID,
+            key = NavigationRoutes.CommonArguments.LIST_ID,
             value = listId
         )
         navigationWriter.navigate(route)
@@ -26,7 +26,7 @@ internal class ListNavigationImpl @Inject constructor(
 
     override fun openCreateItem(listId: Int) {
         val route = NavigationRoutes.Lists.CreateItem.setIntArgument(
-            key = NavigationRoutes.Lists.Arguments.LIST_ID,
+            key = NavigationRoutes.CommonArguments.LIST_ID,
             value = listId
         )
         navigationWriter.navigate(route)

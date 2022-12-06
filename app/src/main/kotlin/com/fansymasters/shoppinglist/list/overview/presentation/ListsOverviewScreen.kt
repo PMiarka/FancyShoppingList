@@ -74,7 +74,6 @@ private fun Content(
                                 color = MaterialTheme.colorScheme.contentColorFor(rowBackground),
                                 modifier = Modifier.padding(horizontal = SPACING_S.dp)
                             )
-
                         }
                     }
                 }

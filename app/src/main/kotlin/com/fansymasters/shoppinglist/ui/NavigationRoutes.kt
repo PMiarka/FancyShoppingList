@@ -1,13 +1,18 @@
 package com.fansymasters.shoppinglist.ui
 
 import androidx.navigation.NavBackStackEntry
-import com.fansymasters.shoppinglist.ui.NavigationRoutes.Lists.Arguments.LIST_ID
+import com.fansymasters.shoppinglist.ui.NavigationRoutes.CommonArguments.LIST_ID
 
 sealed interface NavigationRoutes {
     object Authentication : NavigationRoutes {
         const val Root = "authentication"
         const val Login = "${Root}/login"
         const val Register = "${Root}/register"
+    }
+
+    object Users : NavigationRoutes {
+        const val Root = "users"
+        const val SearchUser = "$Root/SearchUser/{$LIST_ID}"
     }
 
     object Lists : NavigationRoutes {
@@ -17,9 +22,10 @@ sealed interface NavigationRoutes {
         const val Details = "$Root/Details/{$LIST_ID}"
         const val CreateItem = "$Root/CreateItem/{$LIST_ID}"
 
-        object Arguments {
-            const val LIST_ID = "listId"
-        }
+    }
+
+    object CommonArguments {
+        const val LIST_ID = "listId"
     }
 }
 

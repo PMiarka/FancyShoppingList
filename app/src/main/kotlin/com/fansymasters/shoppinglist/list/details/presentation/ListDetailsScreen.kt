@@ -12,6 +12,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -59,6 +60,15 @@ private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewMode
         Column {
             FancyTopBar(
                 text = state.details.name,
+                trailingIcons = {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "",
+                        modifier = Modifier.clickable(
+                            onClick = { viewModel.openSearchUsers(state.details.id) }
+                        )
+                    )
+                },
                 modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
             )
             LazyColumn(

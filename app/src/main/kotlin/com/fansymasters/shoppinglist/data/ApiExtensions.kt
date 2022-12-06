@@ -1,16 +1,15 @@
 package com.fansymasters.shoppinglist.data
 
-import com.fansymasters.shoppinglist.common.Mapper
 import com.fansymasters.shoppinglist.domain.FancyError
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
 suspend fun <FROM, TO> apiCall(
-    mapper: Mapper<FROM, TO>,
+    mapper: (FROM) -> TO,
     function: suspend () -> FROM
 ): ApiResult<TO> =
     runCatching { function() }
-        .map { ApiResult.Success(mapper.map(it)) }
+        .map { ApiResult.Success(mapper(it)) }
         .onFailure { ApiResult.Error(it.mapToError()) }
         .getOrElse { ApiResult.Error(it.mapToError()) }
 
