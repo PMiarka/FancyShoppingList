@@ -28,7 +28,7 @@ internal class CreateItemViewModel @Inject constructor(
     savedState: SavedStateHandle,
 ) : ViewModel(), ProcessingStateReader<Unit> by processingState {
     private val listId =
-        savedState.get<String>(NavigationRoutes.Lists.Arguments.LIST_ID)?.toInt() ?: -1
+        savedState.get<String>(NavigationRoutes.CommonArguments.LIST_ID)?.toInt() ?: -1
 
     init {
         state.filterIsInstance<ProcessingState.Success<Unit>>()

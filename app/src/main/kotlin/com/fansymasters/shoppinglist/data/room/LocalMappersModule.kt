@@ -17,6 +17,9 @@ internal interface LocalMappersModule {
     fun bindsShopUserMapper(impl: ShopUserMapper): Mapper<ShopUsersDto, ShopUsersLocalDto>
 
     @Binds
+    fun bindsShopUserRequestMapper(impl: ShopUserRequestMapper): Mapper<ShopUsersLocalDto, ShopUsersDto>
+
+    @Binds
     fun bindsListItemMapper(impl: ListItemMapper): Mapper<ListItemDto, ListItemLocalDto>
 
     @Binds

@@ -17,7 +17,8 @@ import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 internal fun FancyTopBar(
     text: String,
     modifier: Modifier = Modifier,
-    onBackClick: (() -> Unit)? = null
+    onBackClick: (() -> Unit)? = null,
+    trailingIcons: @Composable () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -38,5 +39,6 @@ internal fun FancyTopBar(
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.weight(1f))
+        trailingIcons()
     }
 }

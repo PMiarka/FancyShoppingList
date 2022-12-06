@@ -27,7 +27,7 @@ class ListsGraphBuilder : GraphBuilder {
             composable(
                 route = NavigationRoutes.Lists.Details,
                 arguments = listOf(
-                    navArgument(NavigationRoutes.Lists.Arguments.LIST_ID) {
+                    navArgument(NavigationRoutes.CommonArguments.LIST_ID) {
                         type = NavType.StringType
                     }
                 )
@@ -37,7 +37,7 @@ class ListsGraphBuilder : GraphBuilder {
             composable(
                 route = NavigationRoutes.Lists.CreateItem,
                 arguments = listOf(
-                    navArgument(NavigationRoutes.Lists.Arguments.LIST_ID) {
+                    navArgument(NavigationRoutes.CommonArguments.LIST_ID) {
                         type = NavType.StringType
                     }
                 )

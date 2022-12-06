@@ -14,6 +14,7 @@ import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsAction
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
 import com.fansymasters.shoppinglist.list.details.usecase.UpdateListItemActions
 import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
+import com.fansymasters.shoppinglist.searchuser.navigation.SearchUserNavigation
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -26,6 +27,7 @@ internal class ListDetailsViewModel @Inject constructor(
     private val updateListItemActions: UpdateListItemActions,
     private val deleteItemActions: DeleteListItemActions,
     private val listNavigation: ListsNavigation,
+    private val usersNavigation: SearchUserNavigation,
     @DeleteItem deleteStateReader: ProcessingStateReader<Unit>,
     fetchDetailsState: StateReader<FetchListDetailsState>,
     updateListItemState: ProcessingStateReader<ListItemLocalDto>,
@@ -42,7 +44,7 @@ internal class ListDetailsViewModel @Inject constructor(
     )
 
     val listId =
-        savedState.get<String>(NavigationRoutes.Lists.Arguments.LIST_ID)?.toInt() ?: -1
+        savedState.get<String>(NavigationRoutes.CommonArguments.LIST_ID)?.toInt() ?: -1
 
     init {
         fetchDetails()
@@ -77,6 +79,10 @@ internal class ListDetailsViewModel @Inject constructor(
 
     fun addItem() {
         listNavigation.openCreateItem(listId)
+    }
+
+    fun openSearchUsers(listId: Int) {
+        usersNavigation.openSearchUser(listId)
     }
 
     fun navigateUp() {

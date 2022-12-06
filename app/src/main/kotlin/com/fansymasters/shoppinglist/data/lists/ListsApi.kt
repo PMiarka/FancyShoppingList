@@ -25,6 +25,12 @@ internal interface ListsApi {
         @Body itemToCreate: CreateListItemDto
     )
 
+    @POST("/api/ListItem/setPermissions/{listId}")
+    suspend fun setUsersPermissions(
+        @Path("listId") itemId: Int,
+        @Body userPermissions: List<ShopUsersDto>
+    )
+
     @POST("/api/ListItem/setFinished/{itemId}")
     suspend fun setItemFinished(@Path("itemId") itemId: Int, @Body isFinished: Boolean)
 

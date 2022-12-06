@@ -15,7 +15,8 @@ internal class ListsOverviewViewModel @Inject constructor(
     private val actions: FetchListsActions,
     private val processingState: ProcessingStateReader<List<ListDto>>,
     private val listsNavigation: ListsNavigation,
-) : ViewModel(), ProcessingStateReader<List<ListDto>> by processingState {
+) : ViewModel(),
+    ProcessingStateReader<List<ListDto>> by processingState {
 
     init {
         viewModelScope.launch {
