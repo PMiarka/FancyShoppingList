@@ -1,33 +1,55 @@
-package com.fansymasters.shoppinglist.searchuser
+package com.fansymasters.shoppinglist.searchuser.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.domain.StateReader
+import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsActions
+import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
 import com.fansymasters.shoppinglist.searchuser.domain.PermissionType
 import com.fansymasters.shoppinglist.searchuser.domain.UserDomainDto
+import com.fansymasters.shoppinglist.searchuser.domain.toApiKey
 import com.fansymasters.shoppinglist.searchuser.usecase.SearchUserActions
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class SearchUserViewModel @Inject constructor(
-    private val actions: SearchUserActions,
+    private val searchActions: SearchUserActions,
+    private val listDetailsActions: FetchListDetailsActions,
     private val processingState: ProcessingStateReader<List<UserDomainDto>>,
+    fetchDetailsState: StateReader<FetchListDetailsState>,
     savedState: SavedStateHandle,
-) : ViewModel(),
-    ProcessingStateReader<List<UserDomainDto>> by processingState {
+) : ViewModel() {
     val bottomSheetState = MutableStateFlow<SetUserPermissionState>(SetUserPermissionState.Idle)
+    val state = fetchDetailsState.state.map {
+        it.details
+    }.combine(processingState.state) { details, searchResult ->
+        SearchUserUiState(
+            foundUsers = (searchResult as? ProcessingState.Success<List<UserDomainDto>>)?.data
+                ?: emptyList(),
+            currentlySharedUsers = details.shopListUsers
+                .filter { it.permissionType != PermissionType.OWNER.toApiKey() }
+        )
+    }.stateIn(viewModelScope, SharingStarted.Lazily, SearchUserUiState(emptyList(), emptyList()))
 
     val listId =
         savedState.get<String>(NavigationRoutes.CommonArguments.LIST_ID)?.toInt() ?: -1
 
+    init {
+        viewModelScope.launch {
+            listDetailsActions.fetchListDetails(listId)
+        }
+    }
+
     fun startSearch(phrase: String) {
         viewModelScope.launch {
-            actions.searchUser(phrase)
+            searchActions.searchUser(phrase)
         }
     }
 
@@ -37,7 +59,7 @@ internal class SearchUserViewModel @Inject constructor(
 
     fun setPermissionToUser(username: String, permissionType: PermissionType) {
         viewModelScope.launch {
-            actions.shareListWithUser(listId, username, permissionType)
+            searchActions.shareListWithUser(listId, username, permissionType)
         }
     }
 

@@ -1,7 +1,8 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 
-package com.fansymasters.shoppinglist.searchuser
+package com.fansymasters.shoppinglist.searchuser.presentation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,9 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.searchuser.domain.PermissionType
-import com.fansymasters.shoppinglist.searchuser.domain.UserDomainDto
 import com.fansymasters.shoppinglist.searchuser.domain.toDisplayText
 import com.fansymasters.shoppinglist.ui.components.FancyButton
 import com.fansymasters.shoppinglist.ui.components.FancyTextField
@@ -34,15 +33,16 @@ internal fun SearchUserScreen(viewModel: SearchUserViewModel = hiltViewModel()) 
     val state = viewModel.state.collectAsState()
     val bottomSheetState = viewModel.bottomSheetState.collectAsState()
     Content(
-        state = (state.value as? ProcessingState.Success)?.data ?: listOf(),
+        state = state.value,
         bottomSheetState = bottomSheetState.value,
         viewModel = viewModel
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(
-    state: List<UserDomainDto>,
+    state: SearchUserUiState,
     bottomSheetState: SetUserPermissionState,
     viewModel: SearchUserViewModel
 ) {
@@ -77,19 +77,21 @@ private fun Content(
                     .fillMaxWidth()
                     .align(CenterHorizontally),
             ) {
-                PermissionType.values().forEach { permissionType ->
-                    FilterChip(
-                        selected = selectedPermission.value == permissionType,
-                        onClick = { selectedPermission.value = permissionType },
-                        label = {
-                            Text(
-                                text = permissionType.toDisplayText(),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.wrapContentWidth()
-                            )
-                        })
-                }
+                PermissionType.values()
+                    .filter { it != PermissionType.OWNER }
+                    .forEach { permissionType ->
+                        FilterChip(
+                            selected = selectedPermission.value == permissionType,
+                            onClick = { selectedPermission.value = permissionType },
+                            label = {
+                                Text(
+                                    text = permissionType.toDisplayText(),
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.wrapContentWidth()
+                                )
+                            })
+                    }
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
@@ -138,7 +140,7 @@ private fun Content(
                 modifier = Modifier.fillMaxWidth(),
             )
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state) {
+                items(state.foundUsers) {
                     Text(
                         text = it.username,
                         modifier = Modifier
