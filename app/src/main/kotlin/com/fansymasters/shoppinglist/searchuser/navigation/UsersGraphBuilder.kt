@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.fansymasters.shoppinglist.navigation.GraphBuilder
-import com.fansymasters.shoppinglist.searchuser.SearchUserScreen
+import com.fansymasters.shoppinglist.searchuser.presentation.SearchUserScreen
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 
 internal class UsersGraphBuilder : GraphBuilder {
