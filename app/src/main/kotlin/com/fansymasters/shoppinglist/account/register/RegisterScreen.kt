@@ -1,4 +1,4 @@
-package com.fansymasters.shoppinglist.register
+package com.fansymasters.shoppinglist.account.register
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text

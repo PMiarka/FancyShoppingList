@@ -1,6 +1,8 @@
 package com.fansymasters.shoppinglist.data.di
 
 import com.fansymasters.shoppinglist.BuildConfig
+import com.fansymasters.shoppinglist.common.CurrentSessionRepository
+import com.fansymasters.shoppinglist.common.TOKEN_KEY
 import com.fansymasters.shoppinglist.data.API_URL
 import dagger.Module
 import dagger.Provides
@@ -50,25 +52,21 @@ internal class ApiModule {
 
     @Provides
     @Authenticated
-    fun providesAuthHttpClient() = OkHttpClient.Builder().apply {
-        if (BuildConfig.DEBUG) {
-            addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+    fun providesAuthHttpClient(sessionRepository: CurrentSessionRepository) =
+        OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            }
         }
-    }
-        .addInterceptor(interceptor())
-        .build()
+            .addInterceptor(interceptor(sessionRepository.typeWithToken))
+            .build()
 
-    private fun interceptor() = Interceptor { chain ->
+    private fun interceptor(typeWithToken: String) = Interceptor { chain ->
         chain.proceed(
             chain.request()
                 .newBuilder()
-                .addHeader(BearerToken.TOKEN_KET, "Bearer ${BearerToken.token}")
+                .addHeader(TOKEN_KEY, typeWithToken)
                 .build()
         )
     }
-}
-
-object BearerToken {
-    const val TOKEN_KET = "Authorization"
-    var token: String = ""
 }

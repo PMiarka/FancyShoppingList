@@ -2,8 +2,6 @@ package com.fansymasters.shoppinglist.list.details.usecase
 
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.onError
-import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.StateReader
 import com.fansymasters.shoppinglist.list.domain.ListDetailsRepository
@@ -26,7 +24,5 @@ internal class FetchListDetailsUseCase @Inject constructor(
     override suspend fun fetchListDetails(listId: Int) {
         apiState.value = ProcessingState.Processing
         apiCall(noMapper()) { repository.fetchListItems(listId) }
-            .onSuccess { apiState.value = ProcessingState.Success(Unit) }
-            .onError { apiState.value = ProcessingState.Error(it) }
     }
 }

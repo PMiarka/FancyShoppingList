@@ -1,12 +1,9 @@
-package com.fansymasters.shoppinglist.login.usecase
+package com.fansymasters.shoppinglist.account.login.usecase
 
-import android.util.Log
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.account.AccountApi
 import com.fansymasters.shoppinglist.data.account.RegisterUserRequestDto
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.onError
-import com.fansymasters.shoppinglist.data.onSuccess
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
@@ -16,8 +13,8 @@ internal class RegisterUserGoogleUseCase @Inject constructor(private val api: Ac
 
     override suspend fun registerUserGoogle(token: String) {
         apiCall(noMapper()) { api.registrationGoogle(token) }
-            .onSuccess { Log.e("-->", "$it") }
-            .onError { Log.e("-->", "error: $it") }
+//            .onSuccess { Log.e("-->", "$it") }
+//            .onError { Log.e("-->", "error: $it") }
     }
 
     override suspend fun registerUserNormal(
@@ -36,7 +33,7 @@ internal class RegisterUserGoogleUseCase @Inject constructor(private val api: Ac
                 )
             )
         }
-            .onSuccess { Log.e("-->", "$it") }
-            .onError { Log.e("-->", "error: $it") }
+//            .onSuccess { Log.e("-->", "$it") }
+//            .onError { Log.e("-->", "error: $it") }
     }
 }

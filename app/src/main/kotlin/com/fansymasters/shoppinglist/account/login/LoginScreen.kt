@@ -1,4 +1,4 @@
-package com.fansymasters.shoppinglist.login
+package com.fansymasters.shoppinglist.account.login
 
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
-    val state = viewModel.state.collectAsState()
+    val state = viewModel.progressState.collectAsState(false)
     Log.e("-->", "state: ${state.value}")
 
 

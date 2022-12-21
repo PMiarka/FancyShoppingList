@@ -1,4 +1,4 @@
-package com.fansymasters.shoppinglist.login.usecase
+package com.fansymasters.shoppinglist.account.login.usecase
 
 internal interface LoginUserActions {
     suspend fun loginUserGoogle(token: String)

@@ -1,10 +1,10 @@
-package com.fansymasters.shoppinglist.register
+package com.fansymasters.shoppinglist.account.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.account.login.usecase.RegisterUserGoogleActions
 import com.fansymasters.shoppinglist.data.account.LoginResponseDto
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
-import com.fansymasters.shoppinglist.login.usecase.RegisterUserGoogleActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

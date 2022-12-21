@@ -1,4 +1,4 @@
-package com.fansymasters.shoppinglist.login
+package com.fansymasters.shoppinglist.account.login
 
 import android.app.Activity
 import android.content.Context

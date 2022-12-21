@@ -2,7 +2,6 @@ package com.fansymasters.shoppinglist.searchuser.data
 
 import com.fansymasters.shoppinglist.common.Mapper
 import com.fansymasters.shoppinglist.common.unitMapper
-import com.fansymasters.shoppinglist.data.ApiResult
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.ListsApi
 import com.fansymasters.shoppinglist.data.lists.ShopUsersDto
@@ -20,7 +19,7 @@ internal class UsersRepositoryImpl @Inject constructor(
     private val usersMapper: Mapper<String, UserDomainDto>,
     private val shopUsersMapper: Mapper<ShopUsersLocalDto, ShopUsersDto>
 ) : UsersRepository {
-    override suspend fun searchUsers(phrase: String): ApiResult<List<UserDomainDto>> =
+    override suspend fun searchUsers(phrase: String): List<UserDomainDto> =
         apiCall(
             mapper = { it.map(usersMapper::map) },
             function = { usersApi.searchPhrase(phrase) }
@@ -29,7 +28,7 @@ internal class UsersRepositoryImpl @Inject constructor(
     override suspend fun setPermissionToUsers(
         listId: Int,
         permissions: List<ShopUsersLocalDto>
-    ): ApiResult<Unit> =
+    ) {
         apiCall(
             mapper = unitMapper(),
             function = {
@@ -39,4 +38,5 @@ internal class UsersRepositoryImpl @Inject constructor(
                 )
             }
         )
+    }
 }

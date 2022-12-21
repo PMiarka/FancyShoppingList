@@ -1,9 +1,9 @@
-package com.fansymasters.shoppinglist.login
+package com.fansymasters.shoppinglist.account.login
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.fansymasters.shoppinglist.account.register.RegisterScreen
 import com.fansymasters.shoppinglist.navigation.GraphBuilder
-import com.fansymasters.shoppinglist.register.RegisterScreen
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 
 class AuthenticationGraphBuilder : GraphBuilder {
