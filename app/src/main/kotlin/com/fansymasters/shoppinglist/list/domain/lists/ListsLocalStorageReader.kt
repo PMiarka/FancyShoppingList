@@ -1,4 +1,4 @@
-package com.fansymasters.shoppinglist.list.domain
+package com.fansymasters.shoppinglist.list.domain.lists
 
 import kotlinx.coroutines.flow.SharedFlow
 

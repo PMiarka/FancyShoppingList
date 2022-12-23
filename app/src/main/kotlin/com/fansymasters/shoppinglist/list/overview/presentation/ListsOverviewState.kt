@@ -1,6 +1,6 @@
 package com.fansymasters.shoppinglist.list.overview.presentation
 
-import com.fansymasters.shoppinglist.list.domain.ListLocalDto
+import com.fansymasters.shoppinglist.list.domain.lists.ListLocalDto
 
 sealed interface ListsOverviewState {
     val lists: List<ListLocalDto>

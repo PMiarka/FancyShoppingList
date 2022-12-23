@@ -1,7 +1,7 @@
-package com.fansymasters.shoppinglist.list.data
+package com.fansymasters.shoppinglist.list.data.lists
 
-import com.fansymasters.shoppinglist.list.domain.ListLocalDto
-import com.fansymasters.shoppinglist.list.domain.ListsLocalStorageReader
+import com.fansymasters.shoppinglist.list.domain.lists.ListLocalDto
+import com.fansymasters.shoppinglist.list.domain.lists.ListsLocalStorageReader
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -1,8 +1,8 @@
-package com.fansymasters.shoppinglist.list.data
+package com.fansymasters.shoppinglist.list.data.lists
 
 import com.fansymasters.shoppinglist.common.Mapper
 import com.fansymasters.shoppinglist.data.lists.ListDto
-import com.fansymasters.shoppinglist.list.domain.ListLocalDto
+import com.fansymasters.shoppinglist.list.domain.lists.ListLocalDto
 import javax.inject.Inject
 
 internal class ListDtoMapper @Inject constructor() : Mapper<ListDto, ListLocalDto> {

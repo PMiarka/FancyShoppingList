@@ -13,7 +13,8 @@ internal class ListItemMapper @Inject constructor() : Mapper<ListItemDto, ListIt
             sortNo = sortNo,
             unit = unit,
             category = category,
-            finished = finished
+            finished = finished,
+            deleted = false
         )
     }
 }

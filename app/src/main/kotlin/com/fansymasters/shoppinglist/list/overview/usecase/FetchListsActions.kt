@@ -1,6 +1,6 @@
 package com.fansymasters.shoppinglist.list.overview.usecase
 
-import com.fansymasters.shoppinglist.list.domain.ListLocalDto
+import com.fansymasters.shoppinglist.list.domain.lists.ListLocalDto
 import kotlinx.coroutines.flow.SharedFlow
 
 internal interface FetchListsActions {

@@ -7,7 +7,7 @@ import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
-import com.fansymasters.shoppinglist.list.domain.ListDetailsRepository
+import com.fansymasters.shoppinglist.list.domain.listdetails.ListDetailsRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

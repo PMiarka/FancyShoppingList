@@ -1,11 +1,11 @@
-package com.fansymasters.shoppinglist.list.data
+package com.fansymasters.shoppinglist.list.data.lists
 
 import com.fansymasters.shoppinglist.common.Mapper
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
-import com.fansymasters.shoppinglist.list.domain.ListLocalDto
-import com.fansymasters.shoppinglist.list.domain.ListsRepository
+import com.fansymasters.shoppinglist.list.domain.lists.ListLocalDto
+import com.fansymasters.shoppinglist.list.domain.lists.ListsRepository
 import javax.inject.Inject
 
 internal class ListsRepositoryImpl @Inject constructor(

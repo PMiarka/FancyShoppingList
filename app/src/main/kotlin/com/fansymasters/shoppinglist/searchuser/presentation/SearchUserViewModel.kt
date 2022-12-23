@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
-import com.fansymasters.shoppinglist.domain.StateReader
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsActions
-import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
 import com.fansymasters.shoppinglist.searchuser.domain.PermissionType
 import com.fansymasters.shoppinglist.searchuser.domain.UserDomainDto
 import com.fansymasters.shoppinglist.searchuser.domain.toApiKey
@@ -23,12 +21,11 @@ internal class SearchUserViewModel @Inject constructor(
     private val searchActions: SearchUserActions,
     private val listDetailsActions: FetchListDetailsActions,
     private val processingState: ProcessingStateReader<List<UserDomainDto>>,
-    fetchDetailsState: StateReader<FetchListDetailsState>,
     savedState: SavedStateHandle,
 ) : ViewModel() {
     val bottomSheetState = MutableStateFlow<SetUserPermissionState>(SetUserPermissionState.Idle)
-    val state = fetchDetailsState.state.map {
-        it.details
+    val state = listDetailsActions.state.map {
+        it
     }.combine(processingState.state) { details, searchResult ->
         SearchUserUiState(
             foundUsers = (searchResult as? ProcessingState.Success<List<UserDomainDto>>)?.data

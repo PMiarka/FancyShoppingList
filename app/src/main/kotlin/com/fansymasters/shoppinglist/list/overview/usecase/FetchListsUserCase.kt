@@ -1,7 +1,7 @@
 package com.fansymasters.shoppinglist.list.overview.usecase
 
-import com.fansymasters.shoppinglist.list.domain.ListsLocalStorageReader
-import com.fansymasters.shoppinglist.list.domain.ListsRepository
+import com.fansymasters.shoppinglist.list.domain.lists.ListsLocalStorageReader
+import com.fansymasters.shoppinglist.list.domain.lists.ListsRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
