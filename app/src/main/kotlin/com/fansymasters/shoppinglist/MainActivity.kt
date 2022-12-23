@@ -6,21 +6,27 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.fansymasters.shoppinglist.account.login.AuthenticationGraphBuilder
 import com.fansymasters.shoppinglist.list.ListsGraphBuilder
-import com.fansymasters.shoppinglist.login.AuthenticationGraphBuilder
 import com.fansymasters.shoppinglist.presentation.UiEvent
 import com.fansymasters.shoppinglist.searchuser.navigation.UsersGraphBuilder
 import com.fansymasters.shoppinglist.ui.NavigationRoutes
 import com.fansymasters.shoppinglist.ui.theme.FancyShoppingListTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
@@ -47,7 +53,6 @@ internal class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             LaunchedEffect(true) {
                 viewModel.uiEventState.collect {
-                    Log.e("Piotrek", "uiEvent state collect: $it")
                     when (it) {
                         is UiEvent.Idle -> Unit
                         is UiEvent.ShowToast -> Toast.makeText(
@@ -58,6 +63,17 @@ internal class MainActivity : ComponentActivity() {
                     }
                 }
             }
+            LaunchedEffect(true) {
+                viewModel.generaleErrorState
+                    .onEach { Log.e("Piotrek", "error") }
+                    .collect {
+                        Log.e("Piotrek", "general error collected: $it")
+                        Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+                    }
+            }
+
+
+            val progressState = viewModel.progressState.collectAsState(initial = false)
 
             FancyShoppingListTheme {
                 // A surface container using the 'background' color from the theme
@@ -72,6 +88,19 @@ internal class MainActivity : ComponentActivity() {
                         authenticationGraphBuilder.buildGraph(this)
                         listsGraphBuilder.buildGraph(this)
                         usersGraphBuilder.buildGraph(this)
+                    }
+                    if (progressState.value) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier,
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
                     }
                 }
             }

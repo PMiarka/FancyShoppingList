@@ -1,7 +1,5 @@
 package com.fansymasters.shoppinglist.searchuser.usecase
 
-import com.fansymasters.shoppinglist.data.onError
-import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.data.room.ShopUsersLocalDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
@@ -22,8 +20,8 @@ internal class SearchUserUseCase @Inject constructor(private val repository: Use
     override suspend fun searchUser(phrase: String) {
         state.value = ProcessingState.Processing
         repository.searchUsers(phrase)
-            .onSuccess { state.value = ProcessingState.Success(it) }
-            .onError { state.value = ProcessingState.Error(it) }
+//            .onSuccess { state.value = ProcessingState.Success(it) }
+//            .onError { state.value = ProcessingState.Error(it) }
     }
 
     override suspend fun shareListWithUser(

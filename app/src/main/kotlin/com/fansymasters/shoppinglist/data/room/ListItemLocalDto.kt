@@ -13,4 +13,5 @@ data class ListItemLocalDto(
     @ColumnInfo(name = "unit") val unit: String,
     @ColumnInfo(name = "category") val category: String,
     @ColumnInfo(name = "finished") val finished: Boolean,
+    @ColumnInfo(name = "deleted") val deleted: Boolean,
 )

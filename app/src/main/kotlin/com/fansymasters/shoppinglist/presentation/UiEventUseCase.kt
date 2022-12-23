@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class UiEventUseCase @Inject constructor() : UiEventStateReader, UiEventStateWriter {
-    override val uiEventState = MutableSharedFlow<UiEvent>()
+    override val uiEventState = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
 
     override fun sendEvent(event: UiEvent) {
         uiEventState.tryEmit(event)

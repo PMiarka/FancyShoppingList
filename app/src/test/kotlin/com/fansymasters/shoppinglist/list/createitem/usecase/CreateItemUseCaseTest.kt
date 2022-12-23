@@ -1,7 +1,7 @@
 package com.fansymasters.shoppinglist.list.createitem.usecase
 
 import app.cash.turbine.test
-import com.fansymasters.shoppinglist.data.ApiResult
+import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingState
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
 import com.fansymasters.shoppinglist.data.lists.mapToCategory
@@ -61,12 +61,12 @@ internal class CreateItemUseCaseTest {
                 quantity = item.qty,
                 category = item.category.mapToCategory()
             )
-        } returns ApiResult.Success(Unit)
+        } returns Unit
         val expected =
             listOf(
-                ProcessingState.Idle,
-                ProcessingState.Processing,
-                ProcessingState.Success(Unit)
+                CommonProcessingState.Idle,
+                CommonProcessingState.Processing,
+                CommonProcessingState.Idle
             )
 
         val testedUseCase = useCase

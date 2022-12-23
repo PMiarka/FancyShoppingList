@@ -3,8 +3,6 @@ package com.fansymasters.shoppinglist.list.createitem.usecase
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
 import com.fansymasters.shoppinglist.data.lists.Category
-import com.fansymasters.shoppinglist.data.onError
-import com.fansymasters.shoppinglist.data.onSuccess
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.list.createitem.domain.CreateListItemRepository
@@ -28,7 +26,5 @@ internal class CreateItemUseCase @Inject constructor(
     ) {
         state.value = ProcessingState.Processing
         apiCall(noMapper()) { repository.createListItem(listId, name, unit, quantity, category) }
-            .onSuccess { state.value = ProcessingState.Success(Unit) }
-            .onError { state.value = ProcessingState.Error(it) }
     }
 }

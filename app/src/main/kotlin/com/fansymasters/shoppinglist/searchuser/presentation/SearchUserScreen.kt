@@ -155,7 +155,7 @@ private fun Content(
 
 
 @Composable
-fun FloatingButton(onClick: () -> Unit, modifier: Modifier) {
+private fun FloatingButton(onClick: () -> Unit, modifier: Modifier) {
     FloatingActionButton(onClick = onClick, modifier = modifier) {
         Icon(Icons.Default.Add, contentDescription = "Add")
     }
