@@ -27,10 +27,6 @@ internal class LoginViewModel @Inject constructor(
 ) : ViewModel(),
     ProgressHandler by progressHandler {
 
-    init {
-        onLogInClick("pimi2", "1234")
-    }
-
     fun onLogInClick(username: String, password: String) {
         handleProcessing(
             progressHandler = this,

@@ -20,8 +20,8 @@ internal class ListsOverviewViewModel @Inject constructor(
     private val actions: FetchListsActions,
     private val listsNavigation: ListsNavigation,
     private val generalErrorHandler: GeneralErrorHandler,
-    private val processingStateReader: CommonProcessingStateReader,
     private val processingStateWriter: CommonProcessingStateWriter,
+    processingStateReader: CommonProcessingStateReader,
 ) : ViewModel() {
 
     val listsOverviewState =
@@ -54,7 +54,6 @@ internal class ListsOverviewViewModel @Inject constructor(
     }
 
     fun fetchDetails() {
-        processingStateWriter.onLoadingStarted()
         handleProcessing(
             onSuccess = { processingStateWriter.onSuccess() },
             onError = {
@@ -62,6 +61,7 @@ internal class ListsOverviewViewModel @Inject constructor(
                 processingStateWriter.onError(it)
             },
         ) {
+            processingStateWriter.onLoadingStarted()
             actions.fetchLists()
         }
     }

@@ -42,18 +42,32 @@ internal fun ListDetailsScreen(
 ) {
     val state = viewModel.state.collectAsState()
 
-    Content(state.value, viewModel)
+    Content(
+        state = state.value,
+        onRefresh = viewModel::fetchDetails,
+        openSearchUser = viewModel::openSearchUsers,
+        deleteItem = viewModel::deleteItem,
+        setItemFinished = viewModel::setItemFinished,
+        addItem = viewModel::addItem
+    )
 }
 
 @Composable
-private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewModel) {
-    val isRefreshing by remember(state) {
-        mutableStateOf(state.apiState is CommonProcessingState.Processing)
-    }
+private fun Content(
+    state: FetchListDetailsState,
+    onRefresh: () -> Unit,
+    openSearchUser: (id: Int) -> Unit,
+    deleteItem: (ListItemLocalDto) -> Unit,
+    setItemFinished: (ListItemLocalDto) -> Unit,
+    addItem: () -> Unit
+
+) {
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = viewModel::fetchDetails,
+        refreshing = state.apiState is CommonProcessingState.Processing,
+        onRefresh = onRefresh,
     )
+    Log.e("Piotrek", "ListDetails state:${state.apiState}")
+    Log.e("Piotrek", "ListDetails pullToRefreshState:${pullRefreshState.progress}")
 
     Box(
         modifier = Modifier
@@ -67,9 +81,7 @@ private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewMode
                     Icon(
                         imageVector = Icons.Default.Menu,
                         contentDescription = "",
-                        modifier = Modifier.clickable(
-                            onClick = { viewModel.openSearchUsers(state.details.id) }
-                        )
+                        modifier = Modifier.clickable { openSearchUser(state.details.id) }
                     )
                 },
                 modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
@@ -84,8 +96,8 @@ private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewMode
                         ListItemContent(
                             item = item,
                             isErrorState = state.apiState is CommonProcessingState.Error,
-                            deleteItem = viewModel::deleteItem,
-                            setItemFinished = viewModel::setItemFinished
+                            deleteItem = deleteItem,
+                            setItemFinished = setItemFinished
                         )
                         Divider(
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.12f)
@@ -95,12 +107,12 @@ private fun Content(state: FetchListDetailsState, viewModel: ListDetailsViewMode
             }
         }
         PullRefreshIndicator(
-            refreshing = isRefreshing,
+            refreshing = state.apiState is CommonProcessingState.Processing,
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter)
         )
         FloatingButton(
-            onClick = viewModel::addItem,
+            onClick = addItem,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(SPACING_L.dp)
@@ -194,7 +206,13 @@ private fun ListItemContent(
 
 @Composable
 private fun FloatingButton(onClick: () -> Unit, modifier: Modifier) {
-    FloatingActionButton(onClick = onClick, modifier = modifier) {
-        Icon(Icons.Default.Add, contentDescription = "Add")
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add"
+        )
     }
 }

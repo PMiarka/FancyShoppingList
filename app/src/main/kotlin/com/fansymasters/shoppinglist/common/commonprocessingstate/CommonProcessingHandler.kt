@@ -11,15 +11,15 @@ internal class CommonProcessingHandler @Inject constructor() :
 
     override val state = MutableStateFlow<CommonProcessingState>(CommonProcessingState.Idle)
 
-    override fun onLoadingStarted() {
-        state.value = CommonProcessingState.Processing
+    override suspend fun onLoadingStarted() {
+        state.emit(CommonProcessingState.Processing)
     }
 
-    override fun onError(e: Throwable) {
-        state.value = CommonProcessingState.Error(e)
+    override suspend fun onError(e: Throwable) {
+        state.emit(CommonProcessingState.Error(e))
     }
 
-    override fun onSuccess() {
-        state.value = CommonProcessingState.Idle
+    override suspend fun onSuccess() {
+        state.emit(CommonProcessingState.Idle)
     }
 }

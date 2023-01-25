@@ -1,7 +1,10 @@
 package com.fansymasters.shoppinglist.list.data.lists
 
+import android.util.Log
 import com.fansymasters.shoppinglist.common.Mapper
+import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.apiCall
+import com.fansymasters.shoppinglist.data.lists.CreateListDto
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
 import com.fansymasters.shoppinglist.list.domain.lists.ListLocalDto
@@ -18,5 +21,16 @@ internal class ListsRepositoryImpl @Inject constructor(
             api.fetchUserLists()
         }
         listsLocalStorageWriter.updateLists(lists)
+    }
+
+    override suspend fun createList(name: String, description: String) {
+        apiCall(mapper::map) {
+            api.createList(
+                CreateListDto(name = name, description = description)
+            )
+        }.also {
+            Log.e("Pioterk", "CreateList success")
+            listsLocalStorageWriter.addNewlyCreateList(it)
+        }
     }
 }
