@@ -1,7 +1,9 @@
 package com.fansymasters.shoppinglist.common
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingStateWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -12,21 +14,36 @@ internal inline fun ViewModel.handleProcessing(
     crossinline onSuccess: () -> Unit = {},
     crossinline action: suspend () -> Unit = {}
 ): Job =
-    viewModelScope.launch(Dispatchers.IO) {
+    viewModelScope.launch() {
         progressHandler.showProgress()
-        kotlin.runCatching { action() }
+        runCatching { action() }
             .onFailure { onError(it) }
-            .onSuccess { onSuccess() }
-        progressHandler.hideProgress()
+            .onSuccess {
+                Log.e("Piotrek", "HandleProcessingSuccess")
+                onSuccess() }
+            .also {
+                Log.e("Piotrek", "HandleProcessing hide progress")
+                progressHandler.hideProgress() }
     }
 
 internal inline fun ViewModel.handleProcessing(
-    crossinline onError: (Throwable) -> Unit = {},
-    crossinline onSuccess: () -> Unit = {},
+    crossinline onError: suspend (Throwable) -> Unit = {},
+    crossinline onSuccess: suspend () -> Unit = {},
     crossinline action: suspend () -> Unit = {}
 ): Job =
     viewModelScope.launch(Dispatchers.IO) {
-        kotlin.runCatching { action() }
+        runCatching { action() }
             .onFailure { onError(it) }
             .onSuccess { onSuccess() }
+    }
+
+internal inline fun ViewModel.handleProcessing(
+    processingStateWriter: CommonProcessingStateWriter,
+    crossinline action: suspend () -> Unit = {}
+): Job =
+    viewModelScope.launch(Dispatchers.IO) {
+        processingStateWriter.onLoadingStarted()
+        runCatching { action() }
+            .onFailure { processingStateWriter.onError(it) }
+            .onSuccess { processingStateWriter.onSuccess() }
     }

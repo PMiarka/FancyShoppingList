@@ -39,9 +39,9 @@ internal class ListDetailsViewModel @Inject constructor(
             FetchListDetailsState(processingState, details)
         }.stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(),
+            SharingStarted.Lazily,
             FetchListDetailsState(
-                CommonProcessingState.Idle,
+                CommonProcessingState.Processing,
                 ListDetailsLocalDto("", 0, "", emptyList(), emptyList())
             )
         )

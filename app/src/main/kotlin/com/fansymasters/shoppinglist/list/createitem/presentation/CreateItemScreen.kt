@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -42,17 +43,22 @@ internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) 
     var isAdvancedItemCreation by remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
-        TopbarTextField(name = nameState.value, onValueChange = { nameState.value = it }, onDone = {
-            viewModel.createItem(
-                name = nameState.value,
-                unit = unitState.value,
-                quantity = quantityState.value.toIntOrNull() ?: 1,
-                category = selectedCategory.value
-            )
-        },
+
+        TopbarTextField(
+            name = nameState.value,
+            onValueChange = { nameState.value = it },
+            onDone = {
+                viewModel.createItem(
+                    name = nameState.value,
+                    unit = unitState.value,
+                    quantity = quantityState.value.toIntOrNull() ?: 1,
+                    category = selectedCategory.value
+                )
+            },
             onExpandClick = { isAdvancedItemCreation = !isAdvancedItemCreation },
             onClearClick = { nameState.value = "" },
-            onAddClick = {}
+            onAddClick = {},
+            onBackClick = viewModel::back
         )
     }
     ) {
@@ -135,12 +141,21 @@ private fun TopbarTextField(
     onDone: () -> Unit,
     onExpandClick: () -> Unit,
     onClearClick: () -> Unit,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(horizontal = SPACING_M.dp)
     ) {
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Back",
+            modifier = Modifier
+                .padding(SPACING_S.dp)
+                .clickable(onClick = onBackClick)
+        )
+
         FancyTextField(
             value = name,
             onValueChange = onValueChange,

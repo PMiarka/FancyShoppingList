@@ -24,7 +24,6 @@ import com.fansymasters.shoppinglist.ui.theme.SPACING_M
 
 @Composable
 internal fun CreateListScreen(viewModel: CreateListViewModel = hiltViewModel()) {
-    val state = viewModel.state.collectAsState()
     val nameState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
     Scaffold(

@@ -25,9 +25,7 @@ internal class ListDetailsRepositoryImpl @Inject constructor(
     override suspend fun fetchListItems(listId: Int) {
         apiCall(noMapper()) { api.fetchListDetails(listId) }
             .also { details ->
-                val sortedDetails =
-                    details.copy(shopListItems = details.shopListItems.sortedBy { it.finished })
-                localStorageWriter.updateList(detailsMapper.map(sortedDetails))
+                localStorageWriter.updateList(detailsMapper.map(details))
             }
     }
 

@@ -2,6 +2,10 @@ package com.fansymasters.shoppinglist.list.createlist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.common.ProgressHandler
+import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingStateReader
+import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingStateWriter
+import com.fansymasters.shoppinglist.common.handleProcessing
 import com.fansymasters.shoppinglist.data.lists.ListDto
 import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
@@ -17,21 +21,17 @@ import javax.inject.Inject
 @HiltViewModel
 internal class CreateListViewModel @Inject constructor(
     private val createListActions: CreateListActions,
-    private val processingState: ProcessingStateReader<ListDto>,
     private val listsNavigation: ListsNavigation,
-) : ViewModel(), ProcessingStateReader<ListDto> by processingState {
-    init {
-        state.filterIsInstance<ProcessingState.Success<ListDto>>()
-            .onEach { navigateUp() }
-            .launchIn(viewModelScope)
-    }
+    private val progressHandler: ProgressHandler,
+) : ViewModel() {
 
     fun navigateUp() {
         listsNavigation.navigateUp()
     }
 
     fun createList(name: String, description: String) {
-        viewModelScope.launch {
+        handleProcessing(progressHandler,
+            onSuccess = { listsNavigation.navigateUp() }) {
             createListActions.createList(name, description)
         }
     }

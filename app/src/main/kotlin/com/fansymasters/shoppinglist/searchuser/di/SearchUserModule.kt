@@ -1,6 +1,6 @@
 package com.fansymasters.shoppinglist.searchuser.di
 
-import com.fansymasters.shoppinglist.domain.ProcessingStateReader
+import com.fansymasters.shoppinglist.domain.StateReader
 import com.fansymasters.shoppinglist.searchuser.domain.UserDomainDto
 import com.fansymasters.shoppinglist.searchuser.navigation.SearchUserNavigation
 import com.fansymasters.shoppinglist.searchuser.navigation.SearchUserNavigationImpl
@@ -18,7 +18,7 @@ internal class SearchUserModule {
     fun bindsSearchUserActions(impl: SearchUserUseCase): SearchUserActions = impl
 
     @Provides
-    fun bindsSearchUserStateReader(impl: SearchUserUseCase): ProcessingStateReader<List<UserDomainDto>> =
+    fun bindsSearchUserStateReader(impl: SearchUserUseCase): StateReader<List<UserDomainDto>> =
         impl
 
     @Provides

@@ -25,10 +25,6 @@ internal class ListsViewModelModule {
     fun providesCreateListActions(impl: CreateListUseCase): CreateListActions = impl
 
     @Provides
-    fun providesCreateListState(impl: CreateListUseCase):
-            ProcessingStateReader<ListDto> = impl
-
-    @Provides
     fun provideFetchListDetailsActions(impl: FetchListDetailsUseCase): FetchListDetailsActions =
         impl
 

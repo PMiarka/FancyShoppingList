@@ -1,8 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.fansymasters.shoppinglist.list.overview.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fansymasters.shoppinglist.ui.components.FancyTopBar
 import com.fansymasters.shoppinglist.ui.theme.Corner
+import com.fansymasters.shoppinglist.ui.theme.SPACING_L
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 
 @Composable
@@ -38,7 +38,6 @@ private fun Content(
     state: ListsOverviewState,
     viewModel: ListsOverviewViewModel
 ) {
-    Log.e("Piotrek", "state: $state")
     val isRefreshing by remember(state) {
         mutableStateOf(state is ListsOverviewState.Loading)
     }
@@ -96,7 +95,9 @@ private fun Content(
         )
         FloatingButton(
             onClick = viewModel::addList,
-            modifier = Modifier.align(Alignment.BottomEnd)
+            modifier = Modifier
+                .padding(SPACING_L.dp)
+                .align(Alignment.BottomEnd)
         )
     }
 }
