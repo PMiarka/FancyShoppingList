@@ -18,8 +18,6 @@ import com.fansymasters.shoppinglist.ui.theme.SPACING_M
 
 @Composable
 internal fun RegisterScreen(viewModel: RegisterViewModel = hiltViewModel()) {
-    val state = viewModel.state.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()

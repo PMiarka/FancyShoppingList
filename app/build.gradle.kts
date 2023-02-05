@@ -117,6 +117,9 @@ dependencies {
     // Room
     roomImplementation()
 
+    // Security Crypto
+    securityCryptoImplementation()
+
     testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("junit:junit:4.13.2")
     testImplementation("app.cash.turbine:turbine:0.12.1")
@@ -212,6 +215,10 @@ fun DependencyHandlerScope.roomImplementation() {
 fun DependencyHandlerScope.composeDebugImplementation() {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+}
+
+fun DependencyHandlerScope.securityCryptoImplementation() {
+    implementation("androidx.security:security-crypto:1.0.0")
 }
 
 fun DependencyHandlerScope.hiltImplementation() {

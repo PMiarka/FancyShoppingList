@@ -30,7 +30,8 @@ internal class CreateListViewModel @Inject constructor(
     }
 
     fun createList(name: String, description: String) {
-        handleProcessing(progressHandler,
+        handleProcessing(
+            progressHandler = progressHandler,
             onSuccess = { listsNavigation.navigateUp() }) {
             createListActions.createList(name, description)
         }

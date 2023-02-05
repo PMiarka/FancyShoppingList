@@ -3,6 +3,7 @@ package com.fansymasters.shoppinglist.searchuser.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fansymasters.shoppinglist.common.ProgressHandler
 import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingState
 import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingStateReader
 import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingStateWriter
@@ -11,6 +12,7 @@ import com.fansymasters.shoppinglist.domain.ProcessingState
 import com.fansymasters.shoppinglist.domain.ProcessingStateReader
 import com.fansymasters.shoppinglist.domain.StateReader
 import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsActions
+import com.fansymasters.shoppinglist.list.navigation.ListsNavigation
 import com.fansymasters.shoppinglist.searchuser.domain.PermissionType
 import com.fansymasters.shoppinglist.searchuser.domain.UserDomainDto
 import com.fansymasters.shoppinglist.searchuser.domain.toApiKey
@@ -26,7 +28,9 @@ internal class SearchUserViewModel @Inject constructor(
     private val searchActions: SearchUserActions,
     private val listDetailsActions: FetchListDetailsActions,
     private val commonProcessingStateWriter: CommonProcessingStateWriter,
+    private val listsNavigation: ListsNavigation,
     commonProcessingStateReader: CommonProcessingStateReader,
+    private val progressHandler: ProgressHandler,
     processingState: StateReader<List<UserDomainDto>>,
     savedState: SavedStateHandle,
 ) : ViewModel() {
@@ -53,8 +57,8 @@ internal class SearchUserViewModel @Inject constructor(
 
     init {
         handleProcessing(
-        onSuccess = commonProcessingStateWriter::onSuccess,
-        onError = commonProcessingStateWriter::onError
+            onSuccess = commonProcessingStateWriter::onSuccess,
+            onError = commonProcessingStateWriter::onError
         ) {
             listDetailsActions.fetchListDetails(listId)
         }
@@ -75,8 +79,8 @@ internal class SearchUserViewModel @Inject constructor(
 
     fun setPermissionToUser(username: String, permissionType: PermissionType) {
         handleProcessing(
-            onSuccess = commonProcessingStateWriter::onSuccess,
-            onError = commonProcessingStateWriter::onError
+            progressHandler = progressHandler,
+            onSuccess = listsNavigation::navigateUp
         ) {
             searchActions.shareListWithUser(listId, username, permissionType)
         }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -27,8 +28,6 @@ import kotlinx.coroutines.launch
 internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
     val state = viewModel.progressState.collectAsState(false)
-    Log.e("-->", "state: ${state.value}")
-
 
     var text = remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
@@ -51,8 +50,7 @@ internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                 Log.e("authResultLauncher", "Google Error, message: ${e.message}")
                 Log.e("authResultLauncher", "Google Error, cause: ${e.cause}")
                 Log.e(
-                    "authResultLauncher",
-                    "Google Error, status code: ${e.statusCode}"
+                    "authResultLauncher", "Google Error, status code: ${e.statusCode}"
                 )
                 Log.d("authResultLauncher", "Google Error: ${e}")
 
@@ -70,11 +68,15 @@ internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
     ) {
         val (login, setLogin) = remember { mutableStateOf("") }
         val (password, setPassword) = remember { mutableStateOf("") }
+        val (keepLoggedIn, setKeepLoggedIn) = remember { mutableStateOf(false) }
         FancyTextField(
             value = login,
             onValueChange = setLogin,
             label = "Username",
-            placeholder = "Type your username"
+            placeholder = "Type your username",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(SPACING_S.dp)
         )
         FancyTextField(
             value = password,
@@ -82,23 +84,36 @@ internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
             label = "Passwrod",
             placeholder = "Type your passwrod",
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = keyboardOptionsPassword()
+            keyboardOptions = keyboardOptionsPassword(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(SPACING_S.dp)
         )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(checked = keepLoggedIn, onCheckedChange = setKeepLoggedIn)
+            Text(text = "Keep me logged in")
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        FancyButton(onClick = {
+            viewModel.onLogInClick(
+                username = login,
+                password = password,
+                keepLoggedIn = keepLoggedIn
+            )
+        }) {
+            Text(text = "Log in")
+        }
+        Spacer(modifier = Modifier.height(SPACING_S.dp))
+        FancyButton(onClick = { authResultLauncher.launch(signInRequestCode) }) {
+            Text(text = "Log in with google")
+        }
+        Spacer(modifier = Modifier.height(SPACING_M.dp))
         FancyClickableText(
             text = "Don't have an account? Sign in here",
             onClick = viewModel::onSignInClick,
         )
-        Spacer(modifier = Modifier.height(40.dp))
-        FancyButton(
-            onClick = { viewModel.onLogInClick(username = login, password = password) }
-        ) {
-            Text(text = "Log in")
-        }
-        Spacer(modifier = Modifier.height(SPACING_S.dp))
-        FancyButton(
-            onClick = { authResultLauncher.launch(signInRequestCode) }
-        ) {
-            Text(text = "Log in with google")
-        }
     }
 }
