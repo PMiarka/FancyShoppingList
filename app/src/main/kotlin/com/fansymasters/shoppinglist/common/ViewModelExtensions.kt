@@ -13,7 +13,7 @@ internal inline fun ViewModel.handleProcessing(
     crossinline onSuccess: () -> Unit = {},
     crossinline action: suspend () -> Unit = {}
 ): Job =
-    viewModelScope.launch() {
+    viewModelScope.launch {
         progressHandler.showProgress()
         runCatching { action() }
             .onFailure { onError(it) }

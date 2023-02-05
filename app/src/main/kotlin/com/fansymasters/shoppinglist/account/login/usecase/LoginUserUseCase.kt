@@ -44,6 +44,8 @@ internal class LoginUserUseCase @Inject constructor(
             val username = encryptedStorage.getString(USERNAME_KEY, "")
             val password = encryptedStorage.getString(PASSWORD_KEY, "")
             loginUserNormal(username, password, true)
+        } else {
+            throw java.lang.IllegalStateException("Cant login automatically")
         }
     }
 }
