@@ -2,8 +2,10 @@ package com.fansymasters.shoppinglist.account.login.di
 
 import com.fansymasters.shoppinglist.account.data.LoginRepositoryImpl
 import com.fansymasters.shoppinglist.account.data.LoginResponseMapper
+import com.fansymasters.shoppinglist.account.data.RegisterRepositoryImpl
 import com.fansymasters.shoppinglist.account.domain.LoginDto
 import com.fansymasters.shoppinglist.account.domain.LoginRepository
+import com.fansymasters.shoppinglist.account.domain.RegisterRepository
 import com.fansymasters.shoppinglist.account.login.usecase.LoginUserActions
 import com.fansymasters.shoppinglist.account.login.usecase.LoginUserUseCase
 import com.fansymasters.shoppinglist.account.login.usecase.RegisterUserGoogleActions
@@ -31,6 +33,9 @@ internal interface LoginModule {
 
     @Binds
     fun bindsLoginRepository(impl: LoginRepositoryImpl): LoginRepository
+
+    @Binds
+    fun bindsRegisterRepository(impl: RegisterRepositoryImpl): RegisterRepository
 
     @Binds
     fun bindsLoginResponseMapper(impl: LoginResponseMapper): Mapper<LoginResponseDto, LoginDto>

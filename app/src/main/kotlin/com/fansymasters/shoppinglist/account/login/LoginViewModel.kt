@@ -26,14 +26,20 @@ internal class LoginViewModel @Inject constructor(
     private val uiEventStateWriter: UiEventStateWriter
 ) : ViewModel(),
     ProgressHandler by progressHandler {
+    init {
+        handleProcessing(
+            progressHandler = this,
+            onSuccess = listsNavigation::openListsOverview
+        ) { loginUserActions.loginAutomaticallyIfUserSaved() }
+    }
 
-    fun onLogInClick(username: String, password: String) {
+    fun onLogInClick(username: String, password: String, keepLoggedIn: Boolean) {
         handleProcessing(
             progressHandler = this,
             onError = generalErrorHandler::mapError,
             onSuccess = listsNavigation::openListsOverview
         ) {
-            loginUserActions.loginUserNormal(username, password)
+            loginUserActions.loginUserNormal(username, password, keepLoggedIn)
         }
     }
 

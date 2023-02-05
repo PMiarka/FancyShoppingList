@@ -15,6 +15,6 @@ internal class FetchListDetailsUseCase @Inject constructor(
     override val state = localStorageReader.localState
 
     override suspend fun fetchListDetails(listId: Int) {
-        apiCall(noMapper()) { repository.fetchListItems(listId) }
+        repository.fetchListItems(listId)
     }
 }

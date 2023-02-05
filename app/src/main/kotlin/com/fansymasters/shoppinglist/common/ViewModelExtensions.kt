@@ -1,6 +1,5 @@
 package com.fansymasters.shoppinglist.common
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingStateWriter
@@ -18,12 +17,8 @@ internal inline fun ViewModel.handleProcessing(
         progressHandler.showProgress()
         runCatching { action() }
             .onFailure { onError(it) }
-            .onSuccess {
-                Log.e("Piotrek", "HandleProcessingSuccess")
-                onSuccess() }
-            .also {
-                Log.e("Piotrek", "HandleProcessing hide progress")
-                progressHandler.hideProgress() }
+            .onSuccess { onSuccess() }
+            .also { progressHandler.hideProgress() }
     }
 
 internal inline fun ViewModel.handleProcessing(

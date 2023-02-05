@@ -1,5 +1,7 @@
 package com.fansymasters.shoppinglist.account.login.usecase
 
+import com.fansymasters.shoppinglist.account.domain.RegisterRepository
+import com.fansymasters.shoppinglist.common.CurrentSessionRepository
 import com.fansymasters.shoppinglist.common.noMapper
 import com.fansymasters.shoppinglist.data.account.AccountApi
 import com.fansymasters.shoppinglist.data.account.RegisterUserRequestDto
@@ -8,13 +10,14 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class RegisterUserGoogleUseCase @Inject constructor(private val api: AccountApi) :
-    RegisterUserGoogleActions {
+internal class RegisterUserGoogleUseCase @Inject constructor(
+    private val repository: RegisterRepository,
+    private val currentSessionRepository: CurrentSessionRepository
+) : RegisterUserGoogleActions {
 
     override suspend fun registerUserGoogle(token: String) {
-        apiCall(noMapper()) { api.registrationGoogle(token) }
-//            .onSuccess { Log.e("-->", "$it") }
-//            .onError { Log.e("-->", "error: $it") }
+        repository.registerUserGoogle(token)
+
     }
 
     override suspend fun registerUserNormal(
@@ -23,17 +26,12 @@ internal class RegisterUserGoogleUseCase @Inject constructor(private val api: Ac
         name: String,
         email: String
     ) {
-        apiCall(noMapper()) {
-            api.registrationNormal(
-                RegisterUserRequestDto(
-                    userName = username,
-                    password = password,
-                    name = name,
-                    email = email
-                )
-            )
-        }
-//            .onSuccess { Log.e("-->", "$it") }
-//            .onError { Log.e("-->", "error: $it") }
+        val loginDto = repository.registerUserCredentials(
+            username = username,
+            password = password,
+            name = name,
+            email = email
+        )
+        currentSessionRepository.saveLoginDetails(loginDto)
     }
 }
