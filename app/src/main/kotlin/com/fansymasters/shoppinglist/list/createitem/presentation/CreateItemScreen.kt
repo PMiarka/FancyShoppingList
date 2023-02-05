@@ -2,6 +2,7 @@
 
 package com.fansymasters.shoppinglist.list.createitem.presentation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -36,27 +37,16 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsState()
-    val nameState = remember { mutableStateOf("") }
-    val unitState = remember { mutableStateOf("") }
-    val quantityState = remember { mutableStateOf("") }
-    val selectedCategory = remember { mutableStateOf(Category.OTHER) }
     var isAdvancedItemCreation by remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
 
         TopbarTextField(
-            name = nameState.value,
-            onValueChange = { nameState.value = it },
-            onDone = {
-                viewModel.createItem(
-                    name = nameState.value,
-                    unit = unitState.value,
-                    quantity = quantityState.value.toIntOrNull() ?: 1,
-                    category = selectedCategory.value
-                )
-            },
+            name = state.value.item.name,
+            onValueChange = viewModel::onNameChanged,
+            onDone = viewModel::createItem,
             onExpandClick = { isAdvancedItemCreation = !isAdvancedItemCreation },
-            onClearClick = { nameState.value = "" },
+            onClearClick = { viewModel.onNameChanged("") },
             onAddClick = {},
             onBackClick = viewModel::back
         )
@@ -73,9 +63,14 @@ internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) 
                 Column {
                     Row {
                         FancyTextField(
-                            value = quantityState.value,
+                            value = state.value.item.qty.takeIf { it > 0 }?.toString() ?: "",
                             onValueChange = { value ->
-                                quantityState.value = value.filter { it.isDigit() }
+                                Log.e("Piotrek", "currentvalue: $value")
+                                viewModel.onQuantityChanged(
+                                    value.filter { it.isDigit() }
+                                        .ifEmpty { "1" }
+                                        .toInt()
+                                )
                             },
                             label = "quantity",
                             placeholder = "",
@@ -84,8 +79,8 @@ internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) 
                         )
                         Spacer(modifier = Modifier.width(SPACING_M.dp))
                         FancyTextField(
-                            value = unitState.value,
-                            onValueChange = { unitState.value = it },
+                            value = state.value.item.unit,
+                            onValueChange = viewModel::onUnitChanged,
                             label = "Unit",
                             placeholder = "kg",
                             modifier = Modifier.weight(1f)
@@ -103,8 +98,8 @@ internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) 
                     ) {
                         Category.values().forEach { item ->
                             FilterChip(
-                                selected = item == selectedCategory.value,
-                                onClick = { selectedCategory.value = item },
+                                selected = item == state.value.item.category,
+                                onClick = { viewModel.onCategoryChanged(item) },
                                 label = {
                                     Text(
                                         text = item.toDisplayText(),
@@ -118,14 +113,8 @@ internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) 
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 FloatingButton(
-                    onClick = {
-                        viewModel.createItem(
-                            name = nameState.value,
-                            unit = unitState.value,
-                            quantity = quantityState.value.toIntOrNull() ?: 1,
-                            category = selectedCategory.value
-                        )
-                    }, modifier = Modifier
+                    onClick = viewModel::createItem,
+                    modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(SPACING_L.dp)
                 )

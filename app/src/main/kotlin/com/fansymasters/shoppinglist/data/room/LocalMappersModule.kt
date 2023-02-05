@@ -1,6 +1,7 @@
 package com.fansymasters.shoppinglist.data.room
 
 import com.fansymasters.shoppinglist.common.Mapper
+import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListDetailsDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
 import com.fansymasters.shoppinglist.data.lists.ShopUsersDto
@@ -21,6 +22,9 @@ internal interface LocalMappersModule {
 
     @Binds
     fun bindsListItemMapper(impl: ListItemMapper): Mapper<ListItemDto, ListItemLocalDto>
+
+    @Binds
+    fun bindsCreateListItemMapper(impl: CreateListItemMapper): Mapper<CreateListItemLocalDto, CreateListItemDto>
 
     @Binds
     fun bindsListDetailsLocalMapper(impl: ListDetailsLocalMapper): Mapper<ListDetailsDto, ListDetailsLocalDto>

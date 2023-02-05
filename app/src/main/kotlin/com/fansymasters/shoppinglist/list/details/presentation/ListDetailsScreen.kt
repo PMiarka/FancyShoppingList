@@ -2,7 +2,6 @@
 
 package com.fansymasters.shoppinglist.list.details.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -35,6 +34,7 @@ import com.fansymasters.shoppinglist.list.details.usecase.FetchListDetailsState
 import com.fansymasters.shoppinglist.ui.components.FancyTopBar
 import com.fansymasters.shoppinglist.ui.theme.SPACING_L
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
+import com.fansymasters.shoppinglist.ui.theme.WEIGHT_ONE
 
 @Composable
 internal fun ListDetailsScreen(
@@ -66,8 +66,6 @@ private fun Content(
         refreshing = state.apiState is CommonProcessingState.Processing,
         onRefresh = onRefresh,
     )
-    Log.e("Piotrek", "ListDetails state:${state.apiState}")
-    Log.e("Piotrek", "ListDetails pullToRefreshState:${pullRefreshState.progress}")
 
     Box(
         modifier = Modifier
@@ -149,7 +147,6 @@ private fun ListItemContent(
         key3 = isAboutToDelete
     ) {
         if (isAboutToDelete) {
-            Log.e("Piotrek", "reset dismiss state")
             dismissState.reset()
         }
     }
@@ -168,38 +165,48 @@ private fun ListItemContent(
         } else {
             MaterialTheme.colorScheme.surfaceVariant
         }
-
         Row(modifier = Modifier
             .clickable { setItemFinished(item) }
             .background(rowColor)
             .fillMaxWidth()
             .padding(horizontal = SPACING_L.dp, vertical = SPACING_S.dp)) {
-            val iconColor = if (item.finished) {
-                MaterialTheme.colorScheme.tertiary
-            } else {
-                MaterialTheme.colorScheme.secondary
-            }
             val textColor = if (item.finished) {
                 MaterialTheme.colorScheme.outline
             } else {
                 MaterialTheme.colorScheme.onBackground
             }
+            val iconColor = if (item.finished) {
+                MaterialTheme.colorScheme.tertiary
+            } else {
+                MaterialTheme.colorScheme.secondary
+            }
+
             Icon(
                 imageVector = Icons.Default.CheckCircle,
                 tint = iconColor,
                 contentDescription = "",
                 modifier = Modifier.padding(end = SPACING_S.dp)
             )
-            Text(
-                text = item.name,
-                color = textColor,
-                modifier = Modifier
-            )
-            Text(
-                text = item.category,
-                color = textColor,
-                modifier = Modifier
-            )
+            Column {
+                Row {
+                    Text(
+                        text = item.name,
+                        color = textColor,
+                        modifier = Modifier
+                    )
+                    Spacer(modifier = Modifier.weight(WEIGHT_ONE))
+                    Text(
+                        text = item.qty.toString(),
+                        color = textColor,
+                        modifier = Modifier
+                    )
+                }
+//                Text(
+//                    text = item.category,
+//                    color = textColor,
+//                    modifier = Modifier
+//                )
+            }
         }
     }
 }
