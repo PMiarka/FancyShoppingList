@@ -1,5 +1,6 @@
 package com.fansymasters.shoppinglist.ui.theme
 
+const val WEIGHT_ONE = 1f
 const val SPACING_L = 24
 const val SPACING_M = 16
 const val SPACING_S = 8

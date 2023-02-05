@@ -1,13 +1,10 @@
 package com.fansymasters.shoppinglist.list.createitem.domain
 
-import com.fansymasters.shoppinglist.data.lists.Category
+import com.fansymasters.shoppinglist.data.room.CreateListItemLocalDto
 
 internal interface CreateListItemRepository {
     suspend fun createListItem(
-        listId: Int,
-        name: String,
-        unit: String,
-        quantity: Int,
-        category: Category,
+        item: CreateListItemLocalDto,
+        listId: Int
     )
 }
