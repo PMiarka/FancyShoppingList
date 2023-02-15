@@ -4,6 +4,6 @@ internal interface ListsNavigation {
     fun openCreateList()
     fun openListsOverview()
     fun openListDetails(listId: Int)
-    fun openCreateItem(listId: Int)
+    fun openCreateOrUpdateItem(listId: Int, itemId: Int?)
     fun navigateUp()
 }

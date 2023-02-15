@@ -2,7 +2,6 @@ package com.fansymasters.shoppinglist.list.createitem.data
 
 import com.fansymasters.shoppinglist.common.Mapper
 import com.fansymasters.shoppinglist.data.apiCall
-import com.fansymasters.shoppinglist.data.lists.Category
 import com.fansymasters.shoppinglist.data.lists.CreateListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListItemDto
 import com.fansymasters.shoppinglist.data.lists.ListsApi
@@ -24,9 +23,26 @@ internal class CreateListItemRepositoryImpl @Inject constructor(
         item: CreateListItemLocalDto,
         listId: Int,
     ) {
-        val responseItem = apiCall(mapper::map) {
-            api.createItem(listId, mapperCreateListItem.map(item))
+        val responseItem: ListItemLocalDto = apiCall(mapper::map) {
+            if (item.id != -1) {
+                api.updateItem(item.id, mapperCreateListItem.map(item))
+                mapCreateItemToItem(item)
+            } else {
+                api.createItem(listId, mapperCreateListItem.map(item))
+            }
         }
-        localStorageWriter.addCreatedItem(responseItem)
+        localStorageWriter.addOrUpdateItem(responseItem)
+    }
+
+    private fun mapCreateItemToItem(item: CreateListItemLocalDto): ListItemDto = with(item) {
+        ListItemDto(
+            id = id,
+            name = name,
+            qty = qty,
+            sortNo = 200,
+            unit = unit,
+            category = category.apiKey,
+            finished = finished
+        )
     }
 }
