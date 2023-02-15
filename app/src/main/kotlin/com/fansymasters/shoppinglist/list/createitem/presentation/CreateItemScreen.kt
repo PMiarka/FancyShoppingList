@@ -37,7 +37,11 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 internal fun CreateItemScreen(viewModel: CreateItemViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsState()
-    var isAdvancedItemCreation by remember { mutableStateOf(false) }
+    var isAdvancedItemCreation by remember {
+        mutableStateOf(
+            (state.value as? CreateListItemState.Idle)?.edit ?: false
+        )
+    }
 
     Scaffold(topBar = {
 

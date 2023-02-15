@@ -2,8 +2,10 @@
 
 package com.fansymasters.shoppinglist.list.details.presentation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,6 +28,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fansymasters.shoppinglist.common.commonprocessingstate.CommonProcessingState
@@ -35,6 +38,7 @@ import com.fansymasters.shoppinglist.ui.components.FancyTopBar
 import com.fansymasters.shoppinglist.ui.theme.SPACING_L
 import com.fansymasters.shoppinglist.ui.theme.SPACING_S
 import com.fansymasters.shoppinglist.ui.theme.WEIGHT_ONE
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun ListDetailsScreen(
@@ -46,9 +50,10 @@ internal fun ListDetailsScreen(
         state = state.value,
         onRefresh = viewModel::fetchDetails,
         openSearchUser = viewModel::openSearchUsers,
+        openUpdateItem = viewModel::openUpdateItem,
         deleteItem = viewModel::deleteItem,
         setItemFinished = viewModel::setItemFinished,
-        addItem = viewModel::addItem
+        addItem = viewModel::openCreateItem
     )
 }
 
@@ -57,16 +62,15 @@ private fun Content(
     state: FetchListDetailsState,
     onRefresh: () -> Unit,
     openSearchUser: (id: Int) -> Unit,
+    openUpdateItem: (Int) -> Unit,
     deleteItem: (ListItemLocalDto) -> Unit,
     setItemFinished: (ListItemLocalDto) -> Unit,
     addItem: () -> Unit
-
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.apiState is CommonProcessingState.Processing,
         onRefresh = onRefresh,
     )
-
     Box(
         modifier = Modifier
             .pullRefresh(pullRefreshState)
@@ -94,6 +98,7 @@ private fun Content(
                         ListItemContent(
                             item = item,
                             isErrorState = state.apiState is CommonProcessingState.Error,
+                            openUpdateItem = openUpdateItem,
                             deleteItem = deleteItem,
                             setItemFinished = setItemFinished
                         )
@@ -126,19 +131,27 @@ private fun Content(
 private fun ListItemContent(
     item: ListItemLocalDto,
     isErrorState: Boolean,
+    openUpdateItem: (Int) -> Unit,
     deleteItem: (ListItemLocalDto) -> Unit,
     setItemFinished: (ListItemLocalDto) -> Unit
 ) {
-    val dismissState = rememberDismissState(
-        confirmStateChange = {
-            if (it == DismissValue.DismissedToStart) {
-                deleteItem(item)
+    val dismissState = remember(item) {
+        DismissState(
+            initialValue = DismissValue.Default,
+            confirmStateChange = {
+                if (it == DismissValue.DismissedToStart) {
+                    deleteItem(item)
+                } else if (it == DismissValue.DismissedToEnd) {
+                    setItemFinished(item)
+                }
+                true
             }
-            true
-        })
+        )
+    }
     val isAboutToDelete by remember(dismissState) {
         derivedStateOf {
-            dismissState.isDismissed(DismissDirection.EndToStart)
+            dismissState.isDismissed(DismissDirection.EndToStart) ||
+                    dismissState.isDismissed(DismissDirection.StartToEnd)
         }
     }
     LaunchedEffect(
@@ -152,13 +165,21 @@ private fun ListItemContent(
     }
     SwipeToDismiss(
         state = dismissState,
-        directions = setOf(DismissDirection.EndToStart),
+        directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
         background = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Red)
-            )
+            if (dismissState.dismissDirection == DismissDirection.EndToStart) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.error)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.inversePrimary)
+                )
+            }
         }) {
         val rowColor = if (item.finished) {
             MaterialTheme.colorScheme.background
@@ -166,7 +187,12 @@ private fun ListItemContent(
             MaterialTheme.colorScheme.surfaceVariant
         }
         Row(modifier = Modifier
-            .clickable { setItemFinished(item) }
+            .pointerInput(item) {
+                detectTapGestures(
+                    onLongPress = { openUpdateItem(item.id) },
+                    onTap = { setItemFinished(item) }
+                )
+            }
             .background(rowColor)
             .fillMaxWidth()
             .padding(horizontal = SPACING_L.dp, vertical = SPACING_S.dp)) {

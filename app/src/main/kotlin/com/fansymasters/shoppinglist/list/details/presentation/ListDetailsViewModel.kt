@@ -81,9 +81,12 @@ internal class ListDetailsViewModel @Inject constructor(
         }
     }
 
+    fun openUpdateItem(itemId: Int){
+        listNavigation.openCreateOrUpdateItem(listId, itemId)
+    }
 
-    fun addItem() {
-        listNavigation.openCreateItem(listId)
+    fun openCreateItem() {
+        listNavigation.openCreateOrUpdateItem(listId, NavigationRoutes.CommonArguments.ITEM_ID_UNDEFINED)
     }
 
     fun openSearchUsers(listId: Int) {

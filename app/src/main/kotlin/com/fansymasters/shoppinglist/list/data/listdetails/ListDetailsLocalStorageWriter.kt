@@ -5,5 +5,5 @@ import com.fansymasters.shoppinglist.data.room.ListItemLocalDto
 
 internal interface ListDetailsLocalStorageWriter {
     suspend fun updateList(list: ListDetailsLocalDto)
-    suspend fun addCreatedItem(item: ListItemLocalDto)
+    suspend fun addOrUpdateItem(item: ListItemLocalDto)
 }
