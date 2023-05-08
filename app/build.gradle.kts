@@ -244,5 +244,6 @@ fun getSecretProperty(key: String): String {
     val fis = FileInputStream("$rootDir/secret.properties")
     val prop = Properties()
     prop.load(fis)
+    prop.load(fis)
     return prop.getProperty(key)
 }
