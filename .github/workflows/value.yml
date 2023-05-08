@@ -1,0 +1,10 @@
+name: ExtractValue
+variables:
+  SOME_VALUE: ""
+on:
+  pull_request:
+jobs:
+  extract_value:
+    runs-on: ubuntu-latest
+    steps:
+      - run: .github/script/value.sh
