@@ -44,7 +44,11 @@ internal class LoginViewModel @Inject constructor(
     }
 
     fun onRegisterUsingGoogleAccountClick(token: String) {
-        viewModelScope.launch {
+        handleProcessing(
+                progressHandler = this,
+                onError = generalErrorHandler::mapError,
+                onSuccess = listsNavigation::openListsOverview
+        ) {
             registerUserGoogleActions.registerUserGoogle(token)
         }
     }
