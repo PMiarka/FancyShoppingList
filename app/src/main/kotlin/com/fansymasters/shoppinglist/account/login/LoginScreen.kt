@@ -43,17 +43,10 @@ internal fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                     text.value = "Google sign in failed"
                 } else {
                     coroutineScope.launch {
-                        viewModel.onRegisterUsingGoogleAccountClick(account.id ?: "")
+                        viewModel.onRegisterUsingGoogleAccountClick(account.idToken ?: "")
                     }
                 }
             } catch (e: ApiException) {
-                Log.e("authResultLauncher", "Google Error, message: ${e.message}")
-                Log.e("authResultLauncher", "Google Error, cause: ${e.cause}")
-                Log.e(
-                    "authResultLauncher", "Google Error, status code: ${e.statusCode}"
-                )
-                Log.d("authResultLauncher", "Google Error: ${e}")
-
                 text.value = "Google sign in failed"
             }
         }
